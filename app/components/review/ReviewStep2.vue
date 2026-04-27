@@ -29,7 +29,7 @@ const { mutateAsync: submitReview, isPending: isSubmittingReview } =
 const activeTab = ref<ShareMode>("text");
 const tabs: { value: ShareMode; label: string }[] = [
   { value: "text", label: "Text" },
-  { value: "voice", label: "Voice Note" },
+  { value: "voice", label: "Voice" },
   { value: "video", label: "Video" },
 ];
 

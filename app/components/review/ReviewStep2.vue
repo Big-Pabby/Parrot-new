@@ -634,31 +634,33 @@ onUnmounted(() => {
           class="bg-white rounded-xl border border-review-border p-4 flex flex-col gap-4"
         >
           <!-- Info banner -->
-          <div class="flex items-start gap-3">
-            <div
-              class="w-6 h-6 rounded-full bg-review-orange flex items-center justify-center flex-shrink-0 mt-0.5"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                class="w-3 h-3 text-white"
-                fill="currentColor"
+          <div class="space-y-1">
+            <div class="flex items-center gap-3">
+              <div
+                class="w-6 h-6 rounded-full bg-review-orange flex items-center justify-center flex-shrink-0 mt-0.5"
               >
-                <path
-                  fill-rule="evenodd"
-                  d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75S21.75 6.615 21.75 12s-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
-                  clip-rule="evenodd"
-                />
-              </svg>
+                <svg
+                  viewBox="0 0 24 24"
+                  class="w-3 h-3 text-white"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75S21.75 6.615 21.75 12s-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div class="flex-1">
+                <p class="text-[12px] font-semibold text-review-text-dark">
+                  Share a helpful review
+                </p>
+              </div>
             </div>
-            <div class="flex-1 space-y-1">
-              <p class="text-[12px] font-semibold text-review-text-dark">
-                Share a helpful review
-              </p>
-              <p class="text-[11px] text-review-text-muted leading-relaxed">
-                Your feedback helps businesses improve and helps other customers
-                make better choices.
-              </p>
-            </div>
+            <p class="text-[11px] text-review-text-muted leading-relaxed">
+              Your feedback helps businesses improve and helps other customers
+              make better choices.
+            </p>
           </div>
 
           <!-- Textarea -->
@@ -668,7 +670,7 @@ onUnmounted(() => {
             rows="5"
             aria-label="Review text"
             :class="[
-              'w-full text-[13px] text-review-text-dark placeholder-[#bfbfc1] resize-none focus:outline-none border rounded-2xl p-4 bg-review-tab-bg transition-colors shadow-sm',
+              'w-full text-[13px] text-review-text-dark placeholder-[#bfbfc1] resize-none focus:outline-none border rounded-xl p-4 bg-review-tab-bg transition-colors',
               errors.reviewText
                 ? 'border-red-400 focus:border-red-500'
                 : 'border-[#e0e0e0] focus:border-review-primary',
@@ -1452,7 +1454,6 @@ onUnmounted(() => {
       v-if="showSuccessModal"
       class="fixed inset-0 z-[100] flex items-center justify-center p-4"
       style="background: rgba(0, 0, 0, 0.45); backdrop-filter: blur(6px)"
-     
     >
       <Transition name="modal-card" appear>
         <div
@@ -1568,8 +1569,8 @@ onUnmounted(() => {
                 Get More Features
               </h3>
               <p class="text-xs text-gray-600 mb-3 leading-relaxed">
-                Login/Create an account in the Parrot app to record voice and video
-                reviews, track your reviews, and earn rewards.
+                Login/Create an account in the Parrot app to record voice and
+                video reviews, track your reviews, and earn rewards.
               </p>
               <div class="flex gap-2">
                 <a
@@ -1578,7 +1579,17 @@ onUnmounted(() => {
                   rel="noopener noreferrer"
                   class="flex-1 flex items-center justify-center gap-1.5 px-2.5 py-2 bg-gray-900 hover:bg-black text-white rounded-lg transition-colors text-xs font-medium"
                 >
-                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M17.05 20.28c-.98.95-2.05.8-3.08.35c-1.09-.46-2.09-.48-3.24 0c-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8c1.18-.24 2.31-.93 3.57-.84c1.51.12 2.65.72 3.4 1.8c-3.12 1.87-2.38 5.98.48 7.13c-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25c.29 2.58-2.34 4.5-3.74 4.25"/></svg>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M17.05 20.28c-.98.95-2.05.8-3.08.35c-1.09-.46-2.09-.48-3.24 0c-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8c1.18-.24 2.31-.93 3.57-.84c1.51.12 2.65.72 3.4 1.8c-3.12 1.87-2.38 5.98.48 7.13c-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25c.29 2.58-2.34 4.5-3.74 4.25"
+                    />
+                  </svg>
                   App Store
                 </a>
                 <a
@@ -1587,7 +1598,17 @@ onUnmounted(() => {
                   rel="noopener noreferrer"
                   class="flex-1 flex items-center justify-center gap-1.5 px-2.5 py-2 bg-gray-900 hover:bg-black text-white rounded-lg transition-colors text-xs font-medium"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="m3.637 3.434l8.74 8.571l-8.675 8.65a2.1 2.1 0 0 1-.326-.613a2.5 2.5 0 0 1 0-.755V4.567c-.026-.395.065-.79.26-1.133m12.506 4.833l-2.853 2.826L4.653 2.6c.28-.097.58-.124.873-.078c.46.126.899.32 1.302.573l7.816 4.325c.508.273 1.003.56 1.498.847M13.29 12.93l2.839 2.788l-2.058 1.146l-6.279 3.49c-.52.287-1.042.561-1.55.874a1.8 1.8 0 0 1-1.472.195zm7.36-.925a1.92 1.92 0 0 1-.99 1.72l-2.346 1.302l-3.087-3.022l3.1-3.074c.795.443 1.577.886 2.358 1.303a1.89 1.89 0 0 1 .964 1.771"/></svg>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="m3.637 3.434l8.74 8.571l-8.675 8.65a2.1 2.1 0 0 1-.326-.613a2.5 2.5 0 0 1 0-.755V4.567c-.026-.395.065-.79.26-1.133m12.506 4.833l-2.853 2.826L4.653 2.6c.28-.097.58-.124.873-.078c.46.126.899.32 1.302.573l7.816 4.325c.508.273 1.003.56 1.498.847M13.29 12.93l2.839 2.788l-2.058 1.146l-6.279 3.49c-.52.287-1.042.561-1.55.874a1.8 1.8 0 0 1-1.472.195zm7.36-.925a1.92 1.92 0 0 1-.99 1.72l-2.346 1.302l-3.087-3.022l3.1-3.074c.795.443 1.577.886 2.358 1.303a1.89 1.89 0 0 1 .964 1.771"
+                    />
+                  </svg>
                   Play Store
                 </a>
               </div>
@@ -1598,7 +1619,6 @@ onUnmounted(() => {
               class="w-full h-px"
               style="background: var(--color-border-tertiary, #f3f4f6)"
             ></div>
-
           </div>
         </div>
       </Transition>
@@ -1618,7 +1638,6 @@ onUnmounted(() => {
           class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden"
           @click.stop
         >
-         
           <!-- Form content -->
           <div class="px-6 py-6">
             <div class="flex flex-col gap-4 mb-6 text-gray-900">
@@ -1698,7 +1717,6 @@ onUnmounted(() => {
             <!-- Divider -->
             <div class="h-px bg-gray-200 my-6"></div>
 
-           
             <!-- Actions -->
             <div class="flex gap-3">
               <button

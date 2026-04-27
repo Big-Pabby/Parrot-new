@@ -58,8 +58,8 @@ const tabContent: Record<string, { title: string; bullets: string[]; description
   <section class="bg-lavender ">
     <div class="max-w-[1400px] mx-auto px-8 lg:px-20">
       <!-- Heading -->
-      <h2 class="font-heading text-4xl lg:text-[56px] font-bold leading-tight text-black mb-16 max-w-[860px] scroll-animate">
-        Everything you need to buy, sell, and move with confidence.
+      <h2 class="font-heading text-4xl lg:text-[56px] font-bold leading-tight text-black my-16 max-w-[1000px] scroll-animate">
+       Know the truth about any business or product before you buy.
       </h2>
 
       <!-- Card -->

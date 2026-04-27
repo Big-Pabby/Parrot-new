@@ -54,7 +54,7 @@ const sections: AudienceSection[] = [
     quote:
       '"I searched for a vendor before buying. Saw 43 reviews, watched two videos, and ordered without a single doubt. This is how buying should always feel."',
     ctaText: 'Join for free',
-    ctaHref: '#',
+    ctaHref: 'https://onelink.to/nwmnzy',
   },
   {
     number: '02',
@@ -85,7 +85,7 @@ const sections: AudienceSection[] = [
     quote:
       '"Parrot is the only platform where people specifically come to find honest commerce content before spending. Every view your content gets on Parrot is from someone who needed exactly what you created."',
     ctaText: 'Join as a Creator',
-    ctaHref: '#',
+    ctaHref: 'https://onelink.to/nwmnzy',
   },
   {
     number: '03',
@@ -117,7 +117,7 @@ const sections: AudienceSection[] = [
     quote:
       '"Parrot is where Nigerians come to check businesses before buying. Publishing your reviews here puts them directly in front of active buyers at the exact moment they are making a decision."',
     ctaText: 'Apply as a Pro Reviewer',
-    ctaHref: '#',
+    ctaHref: 'https://onelink.to/nwmnzy',
   },
   {
     number: '04',
@@ -148,7 +148,7 @@ const sections: AudienceSection[] = [
     quote:
       'Parrot is a social platform built specifically for commerce — where customers discover, discuss, and decide together. Being on Parrot does not just build your rating. It puts you inside the conversation that drives buying decisions.',
     ctaText: 'List your business',
-    ctaHref: '#',
+    ctaHref: 'https://onelink.to/nwmnzy',
   },
 ]
 </script>

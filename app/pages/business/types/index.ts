@@ -135,7 +135,7 @@ export interface BusinessVerification {
 }
 
 export interface BusinessMetricScore {
-  [key: string]: number;
+  [key: string]: number | string;
 }
 
 export interface Analytics {

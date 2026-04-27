@@ -36,27 +36,29 @@ const slides = [
     cta: "Become a UGC Creator",
   },
   {
-    type: "Customers",
-    image: "/images/avatar-femi.png",
+    type: "Everyday Customers",
+    image: "/images/customers.png",
     description:
-      "Real buyers who leave honest reviews that actually help others make smart purchasing decisions without fear of losing their money.",
-    quote: '"Parrot saved me from making the worst purchase of my year."',
+      "They bought something. They experienced something. They came here to tell the truth about it. They are the realest review you will ever read.",
+    quote: '"Turns out, thirty people needed to hear what I had to say."',
     cta: "Join as a Customer",
   },
   {
     type: "Pro Reviewers",
-    image: "/images/avatar-chidinma.jpg",
+    image: "/images/reviewers.png",
     description:
-      "Expert reviewers who dig deep into products and services, giving detailed, trustworthy assessments that the community relies on.",
-    quote: '"People use my content to make real buying decisions."',
+      "They go all the way in. They order the product. They visit the location. They test the service. They write the kind of review that leaves no questions unanswered.",
+    quote:
+      '"I spent two weeks with the DANG Hydra Glow Gel. You needed to know what I found."',
     cta: "Become a Pro Reviewer",
   },
   {
-    type: "Businesses",
-    image: "/images/phone-hero.png",
+    type: "Verified Businesses",
+    image: "/images/business.png",
     description:
-      "Verified businesses that are transparent, trustworthy, and ready to be held accountable by real customer feedback.",
-    quote: '"My conversion rate doubled in two months after joining Parrot."',
+      " They post business and product discovery content in video, photo, and text — and they make it worth watching. Fun. Honest. Opinionated. Shareable. ",
+    quote:
+      '"My video on the best Amala spot on the Island has been shared 800 times."',
     cta: "Claim Your Business",
   },
 ];
@@ -77,7 +79,7 @@ const isLastSlide = () => currentSlide.value === slides.length - 1;
 </script>
 
 <template>
-  <section class="bg-lavender pb-0 pt-8">
+  <section class="bg-lavender pb-0 pt-20">
     <div class="max-w-[1400px] mx-auto px-8 lg:px-20 pb-20 lg:pb-28">
       <!-- Header Row -->
       <div
@@ -142,16 +144,16 @@ const isLastSlide = () => currentSlide.value === slides.length - 1;
       <!-- Slide Card -->
       <div
         :key="currentSlide"
-        class="bg-white border-2 border-black rounded-2xl shadow-brutal overflow-hidden"
+        class="bg-white border-2 border-black rounded-2xl shadow-brutal overflow-hidden p-12"
       >
-        <div class="flex flex-col lg:flex-row">
+        <div class="flex flex-col items-stretch lg:flex-row">
           <!-- Image -->
-          <div class="lg:w-[45%] flex-shrink-0">
+          <div class="lg:w-[45%] rounded-2xl overflow-hidden h-full h-64 lg:h-[450px]">
             <img
               :src="slides[currentSlide].image"
               :alt="slides[currentSlide].type"
-              class="w-full h-64 lg:h-full max-h-[550px] object-cover border-b-2 lg:border-b-0 lg:border-r-2 border-black"
-              style="min-height: 350px"
+              class="w-full h-full  object-cover border-b-2 lg:border-b-0 lg:border-r-2 border-black"
+             
             />
           </div>
           <!-- Content -->
@@ -170,7 +172,7 @@ const isLastSlide = () => currentSlide.value === slides.length - 1;
               </p>
             </div>
             <a
-              href="#"
+              href="https://onelink.to/nwmnzy"
               class="inline-flex items-center border-2 border-black bg-parrot-amber text-black font-body font-medium text-base px-6 py-2.5 rounded-lg hover:brightness-95 transition-all self-start"
             >
               {{ slides[currentSlide].cta }}

@@ -15,7 +15,66 @@ const props = defineProps<{
   businessId: string;
 }>();
 
-const emit = defineEmits<{ continue: [] }>();
+const emit = defineEmits<{
+  continue: [
+    data: {
+      ratings: Record<string, number>;
+      productIds: string[];
+      employeeIds: string[];
+      reviewDate: string;
+    },
+  ];
+}>();
+
+const errors = ref<Record<string, string>>({});
+
+const isFormValid = computed(() => {
+  const e: Record<string, string> = {};
+
+  // Check if all ratings are filled (> 0)
+  categories.value.forEach((cat) => {
+    if (!ratings[cat] || Number(ratings[cat]) <= 0) {
+      e.ratings = "Please rate all categories.";
+    }
+  });
+
+  // Check if date is filled
+  if (!reviewDate.value) {
+    e.date = "Please select a date.";
+  }
+
+  errors.value = e;
+  return Object.keys(e).length === 0;
+});
+
+const onContinue = () => {
+  if (!isFormValid.value) return;
+
+  const productIds = selectedServices.value
+    .map((name) => {
+      const doc = productsData.value?.data?.docs.find(
+        (p: any) => p.name === name,
+      );
+      return doc?._id;
+    })
+    .filter((id): id is string => !!id);
+
+  const employeeIds = selectedStaff.value
+    .map((name) => {
+      const doc = employeesData.value?.data?.docs.find(
+        (e: any) => e.name === name,
+      );
+      return doc?._id;
+    })
+    .filter((id): id is string => !!id);
+
+  emit("continue", {
+    ratings: { ...ratings },
+    productIds,
+    employeeIds,
+    reviewDate: reviewDate.value,
+  });
+};
 
 // Products search and pagination
 const productsSearch = ref("");
@@ -75,10 +134,11 @@ const employeesTotalPages = computed(
 
 const selectedServices = ref<string[]>([]);
 const selectedStaff = ref<string[]>([]);
-const reviewDate = ref("");
+const maxDate = new Date().toISOString().split("T")[0];
+const reviewDate = ref(maxDate);
 const servicesOpen = ref(true);
 const staffOpen = ref(true);
-const ratings = reactive<Record<string, number>>({});
+const ratings = reactive<Record<string, number | string>>({});
 
 watch(
   categories,
@@ -104,7 +164,6 @@ const toggleStaff = (item: string) => {
   else selectedStaff.value.push(item);
 };
 
-const maxDate = new Date().toISOString().split("T")[0];
 const minDate = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000)
   .toISOString()
   .split("T")[0];
@@ -143,10 +202,16 @@ const minDate = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000)
             v-for="(cat, idx) in categories"
             :key="cat"
             :label="cat"
-            :model-value="ratings[cat] ?? 0"
+            :model-value="Number(ratings[cat]) || 0"
             @update:model-value="ratings[cat] = $event"
           />
         </div>
+        <p
+          v-if="errors.ratings"
+          class="text-[12px] text-red-500 mt-2 font-medium"
+        >
+          {{ errors.ratings }}
+        </p>
       </div>
 
       <!-- What did you buy? (collapsible) -->
@@ -403,16 +468,30 @@ const minDate = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000)
             :max="maxDate"
             :min="minDate"
             aria-label="Review date"
-            class="w-full px-4 py-3 rounded-[10px] border border-review-border text-[14px] text-review-text-muted bg-white focus:outline-none focus:border-review-primary transition-colors cursor-pointer"
+            :class="[
+              'w-full px-4 py-3 rounded-[10px] border text-[14px] bg-white focus:outline-none transition-colors cursor-pointer',
+              errors.date
+                ? 'border-red-400 text-red-600 focus:border-red-500'
+                : 'border-review-border text-review-text-muted focus:border-review-primary',
+            ]"
           />
         </div>
+        <p v-if="errors.date" class="text-[12px] text-red-500 mt-2 font-medium">
+          {{ errors.date }}
+        </p>
       </div>
     </div>
 
     <!-- Continue button -->
     <button
-      class="w-full py-3.5 bg-review-primary text-white text-[14px] font-medium rounded-full hover:brightness-110 active:scale-[0.98] transition-all"
-      @click="emit('continue')"
+      :disabled="!isFormValid"
+      :class="[
+        'w-full py-3.5 text-white text-[14px] font-medium rounded-full transition-all',
+        isFormValid
+          ? 'bg-review-primary hover:brightness-110 active:scale-[0.98] cursor-pointer'
+          : 'bg-review-primary/60 cursor-not-allowed opacity-70',
+      ]"
+      @click="onContinue"
     >
       Continue
     </button>

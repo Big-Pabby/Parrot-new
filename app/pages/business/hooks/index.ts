@@ -1,9 +1,68 @@
-import { useQuery } from "@tanstack/vue-query";
+import { useMutation, useQuery } from "@tanstack/vue-query";
 import { computed, unref, type Ref } from "vue";
 import { api } from "~/lib/service";
 import type { Business, BusinessOffer } from "../types";
 import type { ProductPaginatedResponse } from "../types/product";
 import type { EmployeePaginatedResponse } from "../types/employee";
+import type { MediaFile } from "../types";
+
+export interface UploadMediaResponse {
+  url: string;
+  location?: string;
+  path?: string;
+}
+
+export const useUploadMedia = () => {
+  const uploadFile = async (file: File): Promise<MediaFile> => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const response = await api.post<MediaFile>(
+      "/media/upload",
+      formData,
+    );
+    return response.data;
+  };
+
+  const uploadMultiple = async (
+    files: File[],
+  ): Promise<MediaFile[]> => {
+    const results: MediaFile[] = [];
+    for (const file of files) {
+      const result = await uploadFile(file);
+      results.push(result);
+    }
+    return results;
+  };
+
+  return { uploadFile, uploadMultiple };
+};
+
+export interface PublicReviewPayload {
+  businessId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  dateOfExperience: string;
+  experienceSummary: string;
+  rating: Record<string, number>;
+  files: Array<{ url: string }>;
+  productIds: string[];
+  employeeIds: string[];
+  mentions: string[];
+}
+
+export interface ReviewSubmitResponse {
+  success: boolean;
+  message: string;
+  reviewId?: string;
+}
+
+export const useSubmitPublicReview = () => {
+  return useMutation<ReviewSubmitResponse, Error, PublicReviewPayload>({
+    mutationFn: (payload: PublicReviewPayload) =>
+      api.post<ReviewSubmitResponse>("/review/public", payload),
+  });
+};
 
 export interface BusinessApiResponseData {
   fullBusinessProfile: Business;

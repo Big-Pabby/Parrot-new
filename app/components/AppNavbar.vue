@@ -4,7 +4,7 @@ const route = useRoute()
 
 const navLinks = computed(() => [
   { label: 'Home', href: '/', active: route.path === '/' },
-  { label: 'About Us', href: '#about', active: false },
+  { label: 'About Us', href: '/about', active: false },
   { label: 'How It Works', href: '/how-it-works', active: route.path === '/how-it-works' },
   { label: 'Contact', href: '#contact', active: false },
 ])
@@ -30,11 +30,12 @@ const navLinks = computed(() => [
       </div>
 
       <!-- CTA Button -->
-      <button
+      <a
+        href="https://onelink.to/nwmnzy"
         class="hidden lg:block bg-parrot-amber border-2 border-black text-black font-body text-base font-medium px-7 py-2.5 rounded-lg hover:brightness-95 transition-all"
       >
         Sign Up On Parrot
-      </button>
+      </a>
 
       <!-- Mobile Toggle -->
       <button class="lg:hidden p-2" aria-label="Toggle menu" @click="isMenuOpen = !isMenuOpen">
@@ -51,9 +52,9 @@ const navLinks = computed(() => [
         <a v-for="link in navLinks" :key="link.label" :href="link.href" class="font-body text-black text-lg">
           {{ link.label }}
         </a>
-        <button class="self-start bg-parrot-amber border-2 border-black text-black font-body px-6 py-2 rounded-lg">
+        <a href="https://onelink.to/nwmnzy" class="self-start bg-parrot-amber border-2 border-black text-black font-body px-6 py-2 rounded-lg">
           Sign Up On Parrot
-        </button>
+        </a>
       </div>
     </Transition>
   </nav>

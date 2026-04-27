@@ -13,6 +13,10 @@ const businessId = computed(
 
 const currentStep = ref(1);
 const totalSteps = 2;
+const ratings = ref<Record<string, number | string>>({});
+const productIds = ref<string[]>([]);
+const employeeIds = ref<string[]>([]);
+const reviewDate = ref("");
 
 const stepTitle = computed(() =>
   currentStep.value === 1 ? "Rate Your Experience" : "Share Your Review",
@@ -28,6 +32,19 @@ const goBack = () => {
 
 const goNext = () => {
   currentStep.value = 2;
+};
+
+const handleContinue = (data: {
+  ratings: Record<string, number>;
+  productIds: string[];
+  employeeIds: string[];
+  reviewDate: string;
+}) => {
+  ratings.value = data.ratings;
+  productIds.value = data.productIds;
+  employeeIds.value = data.employeeIds;
+  reviewDate.value = data.reviewDate;
+  goNext();
 };
 
 const refresh = () => {
@@ -113,6 +130,7 @@ const refresh = () => {
 
     <!-- Page content -->
     <main class="max-w-xl mx-auto px-4 py-6 pb-12">
+      <img src="/images/parrot-logo.svg" alt="Parrot" class="w-auto mx-auto" />
       <!-- Full page loading state -->
       <div v-if="isLoading" class="space-y-6">
         <div class="animate-pulse space-y-4">
@@ -187,11 +205,17 @@ const refresh = () => {
                   ?.metrics || []
               "
               :businessId="businessId"
-              @continue="goNext"
+              @continue="handleContinue"
             />
           </div>
           <div v-show="currentStep === 2" key="review-step">
-            <ReviewStep2 />
+            <ReviewStep2
+              :ratings="ratings"
+              :business-id="businessId"
+              :product-ids="productIds"
+              :employee-ids="employeeIds"
+              :review-date="reviewDate"
+            />
           </div>
         </div>
       </Transition>

@@ -19,7 +19,7 @@ onMounted(() => {
             Every answer you need before you spend is already on Parrot. Written by real customers, posted by honest creators, and backed by verified business profiles. Join the community that shops smarter.
           </p>
           <a
-            href="#"
+            href="https://onelink.to/nwmnzy"
             class="inline-flex items-center bg-parrot-lime border-2 border-black text-black font-body font-medium text-lg px-8 py-3 rounded-lg hover:brightness-90 transition-all self-start shadow-brutal-sm scroll-animate animate-fade-in-up-delay-2"
           >
             Download The Parrot App

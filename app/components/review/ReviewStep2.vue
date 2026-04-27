@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useSubmitPublicReview, useUploadMedia } from "~/pages/business/hooks";
+
 // ─── Types ───────────────────────────────────────────────────────────────────
 type ShareMode = "text" | "voice" | "video";
 
@@ -8,6 +10,21 @@ interface MediaItem {
   file?: File;
 }
 
+const props = defineProps<{
+  ratings?: Record<string, number | string>;
+  businessId: string;
+  productIds: string[];
+  employeeIds: string[];
+  reviewDate: string;
+}>();
+
+// Media upload hook
+const { uploadMultiple } = useUploadMedia();
+
+// Submit review mutation
+const { mutateAsync: submitReview, isPending: isSubmittingReview } =
+  useSubmitPublicReview();
+
 // ─── Tab state ───────────────────────────────────────────────────────────────
 const activeTab = ref<ShareMode>("text");
 const tabs: { value: ShareMode; label: string }[] = [
@@ -16,11 +33,23 @@ const tabs: { value: ShareMode; label: string }[] = [
   { value: "video", label: "Video" },
 ];
 
+// ─── Download prompt modal state ──────────────────────────────────────────────
+const showDownloadPrompt = ref(false);
+const downloadPromptFeature = ref<ShareMode | null>(null);
+
+// ─── Success modal state ──────────────────────────────────────────────────────
+const showSuccessModal = ref(false);
+const successMessage = ref("");
+
+// ─── User info modal state ──────────────────────────────────────────────────────
+const showUserInfoModal = ref(false);
+const userFormData = ref({ firstName: "", lastName: "", email: "" });
+const userFormErrors = ref<Record<string, string>>({});
+
 // ─── Form state ──────────────────────────────────────────────────────────────
 const reviewText = ref("");
 const reviewTitle = ref("");
 const errors = ref<Record<string, string>>({});
-const isSubmitting = ref(false);
 const toast = ref<{ message: string; type: "success" | "error" } | null>(null);
 let nextId = 100;
 
@@ -48,6 +77,24 @@ const openPreview = (
 const closePreview = () => {
   showPreview.value = false;
   previewType.value = null;
+};
+
+const handleTabClick = (tabValue: ShareMode) => {
+  if (tabValue === "voice" || tabValue === "video") {
+    downloadPromptFeature.value = tabValue;
+    showDownloadPrompt.value = true;
+  } else {
+    activeTab.value = tabValue;
+  }
+};
+
+const handleDownloadApp = () => {
+  successMessage.value = `Opening app store to download Parrot app...`;
+  showDownloadPrompt.value = false;
+  showSuccessModal.value = true;
+  setTimeout(() => {
+    showSuccessModal.value = false;
+  }, 3000);
 };
 
 const goToNextPreview = () => {
@@ -328,66 +375,162 @@ const submitLabel = computed(() =>
   activeTab.value === "video" ? "Tell Parrot" : "Share Review",
 );
 
-const handleSubmit = async () => {
+const toCamelCase = (str: string): string => {
+  return str
+    .trim()
+    .split(/\s+/)
+    .map((word, index) => {
+      const lower = word.toLowerCase();
+      return index === 0
+        ? lower
+        : lower.charAt(0).toUpperCase() + lower.slice(1);
+    })
+    .join("");
+};
+
+const averageRating = computed(() => {
+  if (!props.ratings || Object.keys(props.ratings).length === 0) return null;
+  const values = Object.values(props.ratings)
+    .map((r) => Number(r))
+    .filter((r) => !isNaN(r) && r > 0);
+  if (values.length === 0) return null;
+  return values.reduce((a, b) => a + b, 0) / values.length;
+});
+
+const validateUserInfo = (): boolean => {
+  const e: Record<string, string> = {};
+  if (!userFormData.value.firstName.trim())
+    e.firstName = "First name is required.";
+  if (!userFormData.value.lastName.trim())
+    e.lastName = "Last name is required.";
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!userFormData.value.email.trim()) e.email = "Email is required.";
+  else if (!emailRegex.test(userFormData.value.email))
+    e.email = "Please enter a valid email.";
+  userFormErrors.value = e;
+  return Object.keys(e).length === 0;
+};
+
+const handleSubmit = () => {
   if (!validate()) return;
-  isSubmitting.value = true;
+  // Show user info modal instead of directly submitting
+  userFormData.value.firstName = userInfo.firstName;
+  userFormData.value.lastName = userInfo.lastName;
+  userFormData.value.email = userInfo.email;
+  showUserInfoModal.value = true;
+};
+
+const handleConfirmUserInfo = async () => {
+  if (!validateUserInfo()) return;
+  showUserInfoModal.value = false;
   try {
-    // Build payload — swap with your real API call
-    const formData = new FormData();
-    formData.append("mode", activeTab.value);
-    if (activeTab.value === "text") {
-      formData.append("review", reviewText.value);
-      textMedia.value.forEach(
-        (m, i) => m.file && formData.append(`media_${i}`, m.file),
-      );
-    } else if (activeTab.value === "voice") {
-      formData.append("title", reviewTitle.value);
-      if (audioBlob.value)
-        formData.append("audio", audioBlob.value, "voice-review.webm");
-      voiceMedia.value.forEach(
-        (m, i) => m.file && formData.append(`media_${i}`, m.file),
-      );
-    } else {
-      formData.append("title", reviewTitle.value);
-      if (videoFile.value) formData.append("video", videoFile.value);
-      videoImageFiles.value.forEach(
-        (m, i) => m.file && formData.append(`image_${i}`, m.file),
-      );
+    // 1. Collect all files to upload
+    const filesToUpload: File[] = [];
+    const audioFile =
+      activeTab.value === "voice" && audioBlob.value
+        ? new File([audioBlob.value], "voice-review.webm", {
+            type: "audio/webm",
+          })
+        : null;
+    if (audioFile) filesToUpload.push(audioFile);
+
+    textMedia.value.forEach((m) => {
+      if (m.file) filesToUpload.push(m.file);
+    });
+    voiceMedia.value.forEach((m) => {
+      if (m.file) filesToUpload.push(m.file);
+    });
+    videoImageFiles.value.forEach((m) => {
+      if (m.file) filesToUpload.push(m.file);
+    });
+    if (videoFile.value) filesToUpload.push(videoFile.value);
+
+    // 2. Upload all media files
+    let uploadedUrls: string[] = [];
+    if (filesToUpload.length > 0) {
+      const uploadedResponses = await uploadMultiple(filesToUpload);
+      uploadedUrls = uploadedResponses.map((r) => r.location);
     }
 
-    // Simulate API call
-    await new Promise((r) => setTimeout(r, 900));
+    // 3. Build files payload
+    const filesPayload = uploadedUrls.map((url) => ({ url }));
+
+    // 4. Compute overall rating
+    const ratingValues = Object.values(props.ratings || {})
+      .map(Number)
+      .filter((r) => !isNaN(r) && r > 0);
+    const overall = ratingValues.length
+      ? ratingValues.reduce((a, b) => a + b, 0) / ratingValues.length
+      : 0;
+
+    // 5. Map category ratings to camelCase keys
+    const ratingPayload: Record<string, number> = {};
+    if (props.ratings) {
+      for (const [cat, val] of Object.entries(props.ratings)) {
+        const num = Number(val);
+        if (isNaN(num) || num <= 0) continue;
+        ratingPayload[toCamelCase(cat)] = num;
+      }
+    }
+
+    // 6. Resolve product and employee IDs (already resolved from parent)
+    const productIds = props.productIds;
+    const employeeIds = props.employeeIds;
+
+    // 7. Build payload for /review/public
+    const payload = {
+      businessId: props.businessId,
+      firstName: userFormData.value.firstName,
+      lastName: userFormData.value.lastName,
+      email: userFormData.value.email,
+      dateOfExperience: props.reviewDate,
+      experienceSummary:
+        activeTab.value === "text" ? reviewText.value : reviewTitle.value,
+      rating: ratingPayload,
+      files: filesPayload,
+      productIds,
+      employeeIds,
+      mentions: [] as string[],
+    };
+
+    // 8. Submit JSON payload
+    await submitReview(payload);
+
     showToast("Review submitted successfully!", "success");
-    // Reset
-    reviewText.value = "";
-    reviewTitle.value = "";
-    textMedia.value = [];
-    voiceMedia.value = [];
-    videoImageFiles.value = [];
-    deleteRecording();
-    removeVideo();
-  } catch {
+
+    // 9. Success feedback
+    if (overall) {
+      successMessage.value = `You rated this business ${overall.toFixed(1)}/5 stars`;
+    } else {
+      successMessage.value = "Your review has been submitted!";
+    }
+    showSuccessModal.value = true;
+
+    // 10. Reset form after delay
+    setTimeout(() => {
+      reviewText.value = "";
+      reviewTitle.value = "";
+      textMedia.value = [];
+      voiceMedia.value = [];
+      videoImageFiles.value = [];
+      deleteRecording();
+      removeVideo();
+      showUserInfoModal.value = false;
+    }, 3000);
+  } catch (error) {
+    console.error("Review submission error:", error);
     showToast("Submission failed. Please try again.", "error");
-  } finally {
-    isSubmitting.value = false;
+    showUserInfoModal.value = false;
   }
 };
 
-// Watch for audioUrl and showWaveform changes to init/destroy WaveSurfer
-watch([audioUrl, showWaveform], async ([url, show]) => {
-  if (url && show) {
-    await nextTick();
-    if (!waveform.value && waveformContainer.value) {
-      initWaveform();
-    } else if (waveform.value) {
-      waveform.value.load(url);
-    }
-  } else if (!show && waveform.value) {
-    waveform.value.destroy();
-    waveform.value = null;
-    isWaveformPlaying.value = false;
-  }
-});
+// ─── User info from token ───────────────────────────────────────────────────
+
+const userInfo = {
+  firstName: "",
+  lastName: "",
+  email: "",
+};
 
 // ─── Cleanup ──────────────────────────────────────────────────────────────────
 onUnmounted(() => {
@@ -455,17 +598,34 @@ onUnmounted(() => {
         :key="tab.value"
         role="tab"
         :aria-selected="activeTab === tab.value"
+        :aria-disabled="tab.value !== 'text'"
         class="flex-1 py-2.5 text-[14px] transition-all focus:outline-none"
-        :class="
+        :class="[
           activeTab === tab.value
             ? 'bg-review-primary text-white font-bold'
-            : 'text-review-text-muted font-medium hover:text-review-text-mid'
-        "
-        @click="activeTab = tab.value"
+            : 'text-review-text-muted font-medium hover:text-review-text-mid',
+          tab.value !== 'text'
+            ? 'opacity-60 hover:text-review-text-muted'
+            : 'cursor-pointer',
+        ]"
+        :title="tab.value !== 'text' ? 'Available in Parrot app' : ''"
+        @click="handleTabClick(tab.value)"
       >
-        {{ tab.label }}
+        <span class="inline-flex items-center justify-center gap-2">
+          {{ tab.label }}
+          <span
+            v-if="tab.value !== 'text'"
+            class="rounded-full bg-review-primary/10 text-review-primary text-[10px] font-semibold px-2 py-0.5"
+          >
+            App
+          </span>
+        </span>
       </button>
     </div>
+    <p class="mt-3 text-[12px] text-review-text-muted leading-relaxed">
+      Only text reviews can be shared from the web. Voice and video reviews are
+      available in the Parrot app for the best experience.
+    </p>
 
     <!-- ── TEXT TAB ── -->
     <Transition name="fade-tab" mode="out-in">
@@ -474,9 +634,9 @@ onUnmounted(() => {
           class="bg-white rounded-xl border border-review-border p-4 flex flex-col gap-4"
         >
           <!-- Info banner -->
-          <div class="flex items-center gap-2">
+          <div class="flex items-start gap-3">
             <div
-              class="w-5 h-5 rounded-full bg-review-orange flex items-center justify-center flex-shrink-0 mt-0.5"
+              class="w-6 h-6 rounded-full bg-review-orange flex items-center justify-center flex-shrink-0 mt-0.5"
             >
               <svg
                 viewBox="0 0 24 24"
@@ -490,9 +650,15 @@ onUnmounted(() => {
                 />
               </svg>
             </div>
-            <p class="text-[11px] text-[#00003e] leading-relaxed">
-              Please share your honest review, both positive &amp; negative.
-            </p>
+            <div class="flex-1 space-y-1">
+              <p class="text-[12px] font-semibold text-review-text-dark">
+                Share a helpful review
+              </p>
+              <p class="text-[11px] text-review-text-muted leading-relaxed">
+                Your feedback helps businesses improve and helps other customers
+                make better choices.
+              </p>
+            </div>
           </div>
 
           <!-- Textarea -->
@@ -502,13 +668,73 @@ onUnmounted(() => {
             rows="5"
             aria-label="Review text"
             :class="[
-              'w-full text-[13px] text-review-text-dark placeholder-[#bfbfc1] resize-none focus:outline-none border rounded-lg p-3 bg-transparent transition-colors',
+              'w-full text-[13px] text-review-text-dark placeholder-[#bfbfc1] resize-none focus:outline-none border rounded-2xl p-4 bg-review-tab-bg transition-colors shadow-sm',
               errors.reviewText
                 ? 'border-red-400 focus:border-red-500'
                 : 'border-[#e0e0e0] focus:border-review-primary',
             ]"
           />
-          <p v-if="errors.reviewText" class="text-[11px] text-red-500 -mt-2">
+          <p class="text-[11px] text-review-text-muted mt-2">
+            Optional: add images or a short review to help your feedback stand
+            out.
+          </p>
+          <!-- Media row -->
+          <div
+            class="grid grid-cols-4 items-center gap-1.5 bg-review-tab-bg rounded-lg p-2"
+          >
+            <button
+              class="h-[60px] border border-[#bfbfc1] rounded-lg flex flex-col items-center justify-center gap-1 bg-white hover:bg-gray-50 transition-colors flex-shrink-0"
+              aria-label="Add more media"
+              @click="openTextFilePicker"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                class="w-5 h-5 text-review-text-muted"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 4.5v15m7.5-7.5h-15"
+                />
+              </svg>
+              <span class="text-[11px] text-review-text-muted">Add more</span>
+            </button>
+            <div
+              v-for="media in textMedia"
+              :key="media.id"
+              class="relative w-full h-[60px] rounded-lg overflow-hidden flex-shrink-0 group cursor-pointer"
+              @click="openPreview(textMedia, textMedia.indexOf(media), 'image')"
+            >
+              <img
+                :src="media.src"
+                alt="Review media"
+                class="w-full h-full object-cover hover:opacity-80 transition-opacity"
+              />
+              <button
+                class="absolute top-1 right-1 w-5 h-5 bg-white/90 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+                aria-label="Remove media"
+                @click.stop="removeTextMedia(media.id)"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  class="w-3 h-3 text-[#3b3b3f]"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+          <p v-if="errors.reviewText" class="text-[11px] text-red-500 -mt-1">
             {{ errors.reviewText }}
           </p>
         </div>
@@ -522,63 +748,6 @@ onUnmounted(() => {
           class="hidden"
           @change="onTextFilesSelected"
         />
-
-        <!-- Media row -->
-        <div
-          class="grid grid-cols-4 items-center gap-1.5 bg-review-tab-bg rounded-lg p-2"
-        >
-          <button
-            class="h-[60px] border border-[#bfbfc1] rounded-lg flex flex-col items-center justify-center gap-1 bg-white hover:bg-gray-50 transition-colors flex-shrink-0"
-            aria-label="Add more media"
-            @click="openTextFilePicker"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              class="w-5 h-5 text-review-text-muted"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M12 4.5v15m7.5-7.5h-15"
-              />
-            </svg>
-            <span class="text-[11px] text-review-text-muted">Add more</span>
-          </button>
-          <div
-            v-for="media in textMedia"
-            :key="media.id"
-            class="relative w-full h-[60px] rounded-lg overflow-hidden flex-shrink-0 group cursor-pointer"
-            @click="openPreview(textMedia, textMedia.indexOf(media), 'image')"
-          >
-            <img
-              :src="media.src"
-              alt="Review media"
-              class="w-full h-full object-cover hover:opacity-80 transition-opacity"
-            />
-            <button
-              class="absolute top-1 right-1 w-5 h-5 bg-white/90 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
-              aria-label="Remove media"
-              @click.stop="removeTextMedia(media.id)"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                class="w-3 h-3 text-[#3b3b3f]"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
       </div>
 
       <!-- ── VOICE NOTE TAB ── -->
@@ -1124,16 +1293,19 @@ onUnmounted(() => {
   </div>
   <!-- Submit button -->
   <button
-    :disabled="isSubmitting"
+    :disabled="isSubmittingReview"
     :class="[
-      'w-full mt-5 py-3.5 text-white text-[14px] font-medium rounded-full transition-all',
-      isSubmitting
+      'w-full mt-5 py-3.5 text-white text-[14px] font-medium rounded-full transition-all shadow-lg shadow-review-primary/20',
+      isSubmittingReview
         ? 'bg-review-primary/60 cursor-not-allowed'
         : 'bg-review-primary hover:brightness-110 active:scale-[0.98]',
     ]"
     @click="handleSubmit"
   >
-    <span v-if="isSubmitting" class="flex items-center justify-center gap-2">
+    <span
+      v-if="isSubmittingReview"
+      class="flex items-center justify-center gap-2"
+    >
       <svg
         class="animate-spin w-4 h-4 text-white"
         xmlns="http://www.w3.org/2000/svg"
@@ -1227,6 +1399,353 @@ onUnmounted(() => {
       </div>
     </div>
   </Transition>
+
+  <!-- Download Prompt Modal -->
+  <Transition name="modal">
+    <div
+      v-if="showDownloadPrompt"
+      class="fixed inset-0 z-[100] bg-black/80 flex items-center justify-center p-4"
+      @click="showDownloadPrompt = false"
+    >
+      <div
+        class="bg-white rounded-2xl max-w-sm w-full p-6 flex flex-col gap-4"
+        @click.stop
+      >
+        <div class="flex flex-col gap-2">
+          <h3 class="text-[18px] font-bold text-review-text-dark">
+            {{
+              downloadPromptFeature === "voice"
+                ? "Voice Notes Available in App"
+                : "Video Reviews Available in App"
+            }}
+          </h3>
+          <p class="text-[14px] text-review-text-muted">
+            {{
+              downloadPromptFeature === "voice"
+                ? "Record and share your voice reviews directly through the Parrot app for a seamless experience."
+                : "Create and share video reviews directly through the Parrot app for a seamless experience."
+            }}
+          </p>
+        </div>
+
+        <div class="flex gap-3">
+          <button
+            class="flex-1 py-3 text-[14px] font-medium text-review-primary border border-review-primary rounded-lg hover:bg-review-primary/5 transition-colors"
+            @click="showDownloadPrompt = false"
+          >
+            Continue with Text
+          </button>
+          <button
+            class="flex-1 py-3 text-[14px] font-medium text-white bg-review-primary rounded-lg hover:brightness-110 transition-all active:scale-[0.98]"
+            @click="handleDownloadApp"
+          >
+            Download App
+          </button>
+        </div>
+      </div>
+    </div>
+  </Transition>
+
+  <!-- Success Modal -->
+  <Transition name="modal">
+    <div
+      v-if="showSuccessModal"
+      class="fixed inset-0 z-[100] flex items-center justify-center p-4"
+      style="background: rgba(0, 0, 0, 0.45); backdrop-filter: blur(6px)"
+     
+    >
+      <Transition name="modal-card" appear>
+        <div
+          v-if="showSuccessModal"
+          class="relative w-full max-w-md overflow-hidden rounded-[20px]"
+          style="
+            background: var(--color-background-primary, #fff);
+            border: 0.5px solid rgba(0, 0, 0, 0.12);
+            box-shadow: 0 24px 48px -8px rgba(0, 0, 0, 0.18);
+          "
+          @click.stop
+        >
+          <div class="flex flex-col items-center gap-6 px-7 pt-8 pb-7">
+            <!-- Icon -->
+            <div
+              class="relative w-[72px] h-[72px] flex items-center justify-center"
+            >
+              <div
+                class="absolute inset-0 rounded-full"
+                style="background: #fff7ed; border: 0.5px solid #fed7aa"
+              ></div>
+              <div
+                class="absolute rounded-full"
+                style="
+                  inset: -6px;
+                  border: 1.5px solid #fdba74;
+                  opacity: 0.4;
+                  border-radius: 9999px;
+                "
+              ></div>
+              <svg
+                viewBox="0 0 24 24"
+                class="w-7 h-7 relative"
+                fill="none"
+                stroke="#f97316"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M4.5 12.75l6 6 9-13.5" />
+              </svg>
+            </div>
+
+            <!-- Title & message -->
+            <div class="flex flex-col gap-1.5 text-center">
+              <h3
+                class="text-[18px] font-medium tracking-tight"
+                style="color: var(--color-text-primary, #111827)"
+              >
+                Thanks For Sharing Your Experience
+              </h3>
+              <p
+                class="text-[13px] leading-relaxed"
+                style="color: var(--color-text-secondary, #6b7280)"
+              >
+                Login/Create an account to track and manage your review
+              </p>
+            </div>
+
+            <!-- Star rating display -->
+            <div
+              v-if="averageRating"
+              class="w-full rounded-xl px-5 py-4 flex flex-col items-center gap-2.5"
+              style="background: var(--color-background-secondary, #f9fafb)"
+            >
+              <div class="flex gap-1">
+                <template v-for="i in 5" :key="i">
+                  <svg
+                    viewBox="0 0 24 24"
+                    class="w-5 h-5"
+                    :fill="i <= Math.round(averageRating) ? '#f97316' : 'none'"
+                    :stroke="
+                      i <= Math.round(averageRating) ? '#f97316' : '#d1d5db'
+                    "
+                    stroke-width="1.5"
+                  >
+                    <path
+                      d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"
+                    />
+                  </svg>
+                </template>
+              </div>
+              <p
+                class="text-[22px] font-medium leading-none"
+                style="color: var(--color-text-primary, #111827)"
+              >
+                {{ averageRating.toFixed(1) }}
+                <span
+                  class="text-[13px] font-normal"
+                  style="color: var(--color-text-secondary, #6b7280)"
+                  >/ 5</span
+                >
+              </p>
+              <p
+                class="text-[12px]"
+                style="color: var(--color-text-tertiary, #9ca3af)"
+              >
+                Based on your review ratings
+              </p>
+            </div>
+
+            <!-- Divider -->
+            <div
+              class="w-full h-px"
+              style="background: var(--color-border-tertiary, #f3f4f6)"
+            ></div>
+
+            <!-- App CTA Section -->
+            <div
+              class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-100"
+            >
+              <h3 class="text-sm font-bold text-gray-900 mb-2">
+                Get More Features
+              </h3>
+              <p class="text-xs text-gray-600 mb-3 leading-relaxed">
+                Login/Create an account in the Parrot app to record voice and video
+                reviews, track your reviews, and earn rewards.
+              </p>
+              <div class="flex gap-2">
+                <a
+                  href="https://apps.apple.com/us/app/parrot-customer-reviews-app/id6476291372"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="flex-1 flex items-center justify-center gap-1.5 px-2.5 py-2 bg-gray-900 hover:bg-black text-white rounded-lg transition-colors text-xs font-medium"
+                >
+                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M17.05 20.28c-.98.95-2.05.8-3.08.35c-1.09-.46-2.09-.48-3.24 0c-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8c1.18-.24 2.31-.93 3.57-.84c1.51.12 2.65.72 3.4 1.8c-3.12 1.87-2.38 5.98.48 7.13c-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25c.29 2.58-2.34 4.5-3.74 4.25"/></svg>
+                  App Store
+                </a>
+                <a
+                  href="https://play.google.com/store/apps/details?id=com.zacrac.parrot"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="flex-1 flex items-center justify-center gap-1.5 px-2.5 py-2 bg-gray-900 hover:bg-black text-white rounded-lg transition-colors text-xs font-medium"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="m3.637 3.434l8.74 8.571l-8.675 8.65a2.1 2.1 0 0 1-.326-.613a2.5 2.5 0 0 1 0-.755V4.567c-.026-.395.065-.79.26-1.133m12.506 4.833l-2.853 2.826L4.653 2.6c.28-.097.58-.124.873-.078c.46.126.899.32 1.302.573l7.816 4.325c.508.273 1.003.56 1.498.847M13.29 12.93l2.839 2.788l-2.058 1.146l-6.279 3.49c-.52.287-1.042.561-1.55.874a1.8 1.8 0 0 1-1.472.195zm7.36-.925a1.92 1.92 0 0 1-.99 1.72l-2.346 1.302l-3.087-3.022l3.1-3.074c.795.443 1.577.886 2.358 1.303a1.89 1.89 0 0 1 .964 1.771"/></svg>
+                  Play Store
+                </a>
+              </div>
+            </div>
+
+            <!-- Divider -->
+            <div
+              class="w-full h-px"
+              style="background: var(--color-border-tertiary, #f3f4f6)"
+            ></div>
+
+          </div>
+        </div>
+      </Transition>
+    </div>
+  </Transition>
+
+  <!-- User Info Modal -->
+  <Transition name="modal">
+    <div
+      v-if="showUserInfoModal"
+      class="fixed inset-0 z-[101] bg-black/50 flex items-center justify-center p-4"
+      @click="showUserInfoModal = false"
+    >
+      <Transition name="modal-card" appear>
+        <div
+          v-if="showUserInfoModal"
+          class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden"
+          @click.stop
+        >
+         
+          <!-- Form content -->
+          <div class="px-6 py-6">
+            <div class="flex flex-col gap-4 mb-6 text-gray-900">
+              <!-- First Name -->
+              <div class="flex flex-col gap-2">
+                <label class="text-sm font-semibold text-gray-700"
+                  >First Name *</label
+                >
+                <input
+                  v-model="userFormData.firstName"
+                  type="text"
+                  placeholder="John"
+                  class="px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-review-primary focus:ring-2 focus:ring-review-primary/20 transition-all bg-gray-50"
+                  :class="
+                    userFormErrors.firstName
+                      ? 'border-red-400 bg-red-50 focus:ring-red-100'
+                      : ''
+                  "
+                />
+                <p
+                  v-if="userFormErrors.firstName"
+                  class="text-xs text-red-600 font-medium"
+                >
+                  {{ userFormErrors.firstName }}
+                </p>
+              </div>
+
+              <!-- Last Name -->
+              <div class="flex flex-col gap-2">
+                <label class="text-sm font-semibold text-gray-700"
+                  >Last Name *</label
+                >
+                <input
+                  v-model="userFormData.lastName"
+                  type="text"
+                  placeholder="Doe"
+                  class="px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-review-primary focus:ring-2 focus:ring-review-primary/20 transition-all bg-gray-50"
+                  :class="
+                    userFormErrors.lastName
+                      ? 'border-red-400 bg-red-50 focus:ring-red-100'
+                      : ''
+                  "
+                />
+                <p
+                  v-if="userFormErrors.lastName"
+                  class="text-xs text-red-600 font-medium"
+                >
+                  {{ userFormErrors.lastName }}
+                </p>
+              </div>
+
+              <!-- Email -->
+              <div class="flex flex-col gap-2">
+                <label class="text-sm font-semibold text-gray-700"
+                  >Email Address *</label
+                >
+                <input
+                  v-model="userFormData.email"
+                  type="email"
+                  placeholder="john@example.com"
+                  class="px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-review-primary focus:ring-2 focus:ring-review-primary/20 transition-all bg-gray-50"
+                  :class="
+                    userFormErrors.email
+                      ? 'border-red-400 bg-red-50 focus:ring-red-100'
+                      : ''
+                  "
+                />
+                <p
+                  v-if="userFormErrors.email"
+                  class="text-xs text-red-600 font-medium"
+                >
+                  {{ userFormErrors.email }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="h-px bg-gray-200 my-6"></div>
+
+           
+            <!-- Actions -->
+            <div class="flex gap-3">
+              <button
+                class="flex-1 px-4 py-2.5 rounded-full border-2 border-gray-300 text-gray-700 text-sm font-semibold hover:border-gray-400 hover:bg-gray-50 transition-all active:scale-95"
+                @click="showUserInfoModal = false"
+              >
+                Cancel
+              </button>
+              <button
+                class="flex-1 px-4 py-2.5 rounded-full bg-review-primary text-white text-sm font-semibold hover:brightness-110 active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                :disabled="isSubmittingReview"
+                @click="handleConfirmUserInfo"
+              >
+                <span
+                  v-if="isSubmittingReview"
+                  class="flex items-center justify-center gap-2"
+                >
+                  <svg
+                    class="animate-spin w-4 h-4 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      class="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      stroke-width="4"
+                    />
+                    <path
+                      class="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8z"
+                    />
+                  </svg>
+                  Submitting…
+                </span>
+                <span v-else>Submit Review</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </div>
+  </Transition>
 </template>
 
 <style scoped>
@@ -1275,5 +1794,35 @@ onUnmounted(() => {
 }
 .modal-leave-to :deep(*) {
   transform: scale(0.95);
+}
+
+/* Backdrop fade */
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.25s ease;
+}
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+
+/* Card spring-in */
+.modal-card-enter-active {
+  transition:
+    opacity 0.3s ease,
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.modal-card-leave-active {
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+.modal-card-enter-from {
+  opacity: 0;
+  transform: scale(0.88) translateY(12px);
+}
+.modal-card-leave-to {
+  opacity: 0;
+  transform: scale(0.95) translateY(6px);
 }
 </style>

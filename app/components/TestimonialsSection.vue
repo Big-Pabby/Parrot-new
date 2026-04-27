@@ -2,6 +2,7 @@
 import { ref, computed, onMounted, Transition } from "vue";
 
 const currentPage = ref<number>(1);
+const itemsPerPage = 3;
 
 const observeElements = (selector: string, className: string) => {
   if (typeof window === "undefined") return;
@@ -58,21 +59,21 @@ const testimonials = [
   },
 ];
 
-const totalPages = 5;
+const totalPages = computed(() =>
+  Math.ceil(testimonials.length / itemsPerPage),
+);
+
 const visibleTestimonials = computed(() => {
-  const start = (currentPage.value - 1) % testimonials.length;
-  return [
-    testimonials[start % testimonials.length]!,
-    testimonials[(start + 1) % testimonials.length]!,
-    testimonials[(start + 2) % testimonials.length]!,
-  ];
+  const start = (currentPage.value - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  return testimonials.slice(start, end);
 });
 
 const prev = () => {
   if (currentPage.value > 1) currentPage.value--;
 };
 const next = () => {
-  if (currentPage.value < totalPages) currentPage.value++;
+  if (currentPage.value < totalPages.value) currentPage.value++;
 };
 </script>
 

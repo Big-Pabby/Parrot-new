@@ -83,11 +83,11 @@ const next = () => {
        <!-- Heading -->
        <div class="text-center mb-10 md:mb-12 lg:mb-16">
          <h2
-           class="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-[56px] font-semibold leading-tight text-black mb-4 scroll-animate"
+           class="font-heading text-3xl sm:text-4xl md:text-5xl  font-semibold leading-tight text-black mb-4 scroll-animate"
          >
            The community is already talking.
          </h2>
-         <p class="font-body text-black text-base md:text-xl">
+         <p class="font-body text-black text-base md:text-lg">
            Here is what our members are saying.
          </p>
        </div>

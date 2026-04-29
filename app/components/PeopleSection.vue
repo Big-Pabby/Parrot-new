@@ -163,10 +163,10 @@ const isLastSlide = () => currentSlide.value === slides.length - 1;
                {{ slides[currentSlide].type }}
              </h3>
              <div class="flex flex-col gap-4 md:gap-5">
-               <p class="font-body text-black text-base md:text-xl leading-relaxed">
+               <p class="font-body text-black text-base md:text-lg leading-relaxed">
                  {{ slides[currentSlide].description }}
                </p>
-               <p class="font-body font-bold text-black text-base md:text-xl leading-relaxed">
+               <p class="font-body font-bold text-black text-base md:text-lg leading-relaxed">
                  {{ slides[currentSlide].quote }}
                </p>
              </div>

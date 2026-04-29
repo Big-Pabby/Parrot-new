@@ -65,7 +65,7 @@ const tabContent: Record<
     <div class="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-20">
       <!-- Heading -->
       <h2
-        class="font-heading text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-black my-16 max-w-[700px] scroll-animate"
+        class="font-heading text-3xl sm:text-4xl md:text-4xl font-bold leading-tight text-black mt-20 mb-8 max-w-[700px] scroll-animate"
       >
         Know the truth about any business or product before you buy.
       </h2>
@@ -109,7 +109,7 @@ const tabContent: Record<
             <!-- Feature List -->
             <div class="flex-1 flex flex-col gap-6 md:gap-8 text-left">
               <h3
-                class="font-heading text-2xl sm:text-3xl md:text-[40px] lg:text-[48px] font-normal leading-tight text-black"
+                class="font-heading text-2xl sm:text-3xl md:text-[40px] font-normal leading-tight text-black"
               >
                 {{ tabContent[activeTab].title }}
               </h3>
@@ -130,7 +130,7 @@ const tabContent: Record<
                   </div>
 
                   <span
-                    class="font-body text-black text-base md:text-xl leading-relaxed"
+                    class="font-body text-black text-base md:text-lg leading-relaxed"
                     >{{ bullet }}</span
                   >
                 </div>

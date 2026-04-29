@@ -88,7 +88,7 @@ onMounted(() => {
             <span
               :class="[
                 'font-heading font-normal leading-tight flex-1',
-                faq.open ? 'text-2xl lg:text-3xl text-black' : 'text-2xl lg:text-[40px] text-black',
+                faq.open ? 'text-2xl lg:text-2xl text-black' : 'text-2xl lg:text-3xl text-black',
               ]"
             >
               {{ faq.question }}

@@ -7,16 +7,16 @@ onMounted(() => {
 </script>
 
 <template>
-   <section class="bg-cream pt-4 pb-0 overflow-hidden">
+   <section class="bg-cream pt-16 pb-0 overflow-hidden">
      <div class="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-20">
-       <div class="flex flex-col-reverse lg:flex-row items-center justify-between gap-8 md:gap-12 min-h-[500px] md:min-h-[600px] lg:min-h-[700px]">
+       <div class="flex flex-col-reverse lg:flex-row items-center justify-between gap-8 md:gap-12">
          <!-- Left Content -->
          <div class="flex flex-col gap-6 md:gap-8 w-full lg:w-6/12">
            <div class="flex flex-col gap-4 md:gap-6">
-             <h1 class="font-heading text-4xl md:text-6xl  font-bold leading-[1.1] text-black scroll-animate">
+             <h1 class="font-heading text-4xl md:text-5xl  font-bold leading-[1.1] text-black scroll-animate">
                Everything you need to avoid bad buying decisions.
              </h1>
-             <p class="font-body text-[#333333] text-base sm:text-lg md:text-xl leading-relaxed max-w-[540px] scroll-animate">
+             <p class="font-body text-[#333333] text-base  md:text-lg leading-relaxed max-w-[540px] scroll-animate">
                A community of real Customers, Creators, and Pro Reviewers having honest conversations about their buying experiences — that businesses cannot delete.
              </p>
            </div>

@@ -12,10 +12,10 @@ onMounted(() => {
        <div class="flex flex-col lg:flex-row items-center gap-8 md:gap-10 lg:gap-0">
          <!-- Left Content -->
          <div class="flex flex-col  gap-6 md:gap-8 max-w-full lg:max-w-[600px] flex-1 z-10 text-center lg:text-left">
-           <h2 class="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-[56px] font-bold leading-tight text-black scroll-animate">
+           <h2 class="font-heading text-3xl sm:text-4xl md:text-5xl  font-bold leading-tight text-black scroll-animate">
              Stop Making Buying Decisions Based on Guesses. Join Parrot Now
            </h2>
-           <p class="font-body text-black text-base md:text-lg lg:text-xl leading-relaxed max-w-full lg:max-w-[560px] scroll-animate animate-fade-in-up-delay">
+           <p class="font-body text-black text-base md:text-lg lg:text-lg leading-relaxed max-w-full lg:max-w-[560px] scroll-animate animate-fade-in-up-delay">
              Every answer you need before you spend is already on Parrot. Written by real customers, posted by honest creators, and backed by verified business profiles. Join the community that shops smarter.
            </p>
            <a

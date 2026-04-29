@@ -11,10 +11,11 @@ const navLinks = computed(() => [
 </script>
 
 <template>
-  <nav class="fixed top-0 left-0 right-0 z-50 bg-cream border border-black">
-    <div class="max-w-[1400px] mx-auto px-8 lg:px-20 py-4 flex items-center justify-between">
+  <nav class="fixed top-0 left-0 right-0 z-50 md:mx-20 md:my-6 bg-lavender border border-black md:rounded-[12px] md:shadow-brutal">
+    <div class="max-w-[1400px] mx-auto px-8 py-4 flex items-center justify-between">
       <!-- Logo -->
-      <img src="/images/parrot-logo.svg" alt="Parrot" class=" w-auto" />
+       <nuxt-link to="/"> <img src="/images/parrot-logo.svg" alt="Parrot" class=" w-auto" /></nuxt-link>
+     
 
       <!-- Desktop Nav Links -->
       <div class="hidden lg:flex items-center gap-10">

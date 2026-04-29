@@ -41,6 +41,15 @@ const isFormValid = computed(() => {
   // Check if date is filled
   if (!reviewDate.value) {
     e.date = "Please select a date.";
+  } else {
+    // Validate date is within the last 90 days
+    const selectedDate = new Date(reviewDate.value);
+    const minDateObj = new Date(minDate);
+    const maxDateObj = new Date(maxDate);
+
+    if (selectedDate < minDateObj || selectedDate > maxDateObj) {
+      e.date = "Please select a date within the last 90 days.";
+    }
   }
 
   errors.value = e;
@@ -164,7 +173,7 @@ const toggleStaff = (item: string) => {
   else selectedStaff.value.push(item);
 };
 
-const minDate = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000)
+const minDate = new Date(Date.now() - 89 * 24 * 60 * 60 * 1000)
   .toISOString()
   .split("T")[0];
 </script>
@@ -273,9 +282,7 @@ const minDate = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000)
                 class="flex items-center justify-between py-2 px-1 rounded hover:bg-gray-50 transition-colors w-full"
                 @click="toggleService(item)"
               >
-                <span class="text-[14px] text-review-text-muted">{{
-                  item
-                }}</span>
+                <span class="text-[14px] text-black">{{ item }}</span>
                 <div
                   class="w-[18px] h-[18px] border rounded-sm flex items-center justify-center flex-shrink-0 transition-colors"
                   :class="
@@ -390,9 +397,7 @@ const minDate = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000)
                 class="flex items-center justify-between py-2 px-1 rounded hover:bg-gray-50 transition-colors w-full"
                 @click="toggleStaff(person)"
               >
-                <span class="text-[14px] text-review-text-muted">{{
-                  person
-                }}</span>
+                <span class="text-[14px] text-black">{{ person }}</span>
                 <div
                   class="w-[18px] h-[18px] border rounded-sm flex items-center justify-center flex-shrink-0 transition-colors"
                   :class="

@@ -44,7 +44,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <section class="bg-cream py-20 lg:py-28">
+  <section class="bg-cream pb-20 lg:pb-28">
     <div class="max-w-[1100px] mx-auto px-8 lg:px-20">
       <!-- Heading -->
       <h2 class="font-heading text-5xl lg:text-[56px] font-bold text-center text-black mb-14 scroll-animate">

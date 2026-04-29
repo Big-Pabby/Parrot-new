@@ -160,7 +160,7 @@ const sections: AudienceSection[] = [
     <main>
       <!-- ─── Hero header: cream bg ─────────────────────────────── -->
       <div class="bg-cream pt-32 pb-14 lg:pb-20">
-        <div class="max-w-[1400px] mx-auto px-8 lg:px-20 flex justify-end">
+        <div class="max-w-[1400px] mx-auto px-8 pt-16 lg:px-20 flex justify-end">
           <h1
             class="font-heading text-5xl lg:text-[64px] xl:text-[72px] font-bold text-black leading-tight text-right"
           >

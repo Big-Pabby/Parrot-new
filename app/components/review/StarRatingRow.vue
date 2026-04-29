@@ -13,7 +13,7 @@ const hovered = ref(0)
 
 <template>
   <div class="flex items-center justify-between py-2">
-    <span class="text-[14px] text-review-text-muted font-rubik">{{ label }}</span>
+    <span class="text-[14px] text-black font-rubik">{{ label }}</span>
     <div class="flex items-center gap-0.5">
       <button
         v-for="star in 5"

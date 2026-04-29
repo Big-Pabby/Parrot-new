@@ -1,18 +1,18 @@
 <template>
-  <footer class="bg-black py-16 lg:py-20">
-    <div class="max-w-[1400px] mx-auto px-8 lg:px-20">
+  <footer class="bg-black py-12 md:py-16 lg:py-20">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-20">
       <!-- Top Row: Logo + Links -->
-      <div class="flex flex-col lg:flex-row gap-12 lg:gap-36 mb-14">
+      <div class="flex flex-col lg:flex-row gap-8 md:gap-12 lg:gap-36 mb-10 md:mb-14">
         <!-- Logo + Social -->
-        <div class="flex flex-col gap-8 flex-shrink-0">
+        <div class="flex flex-col gap-6 md:gap-8 flex-shrink-0">
           <NuxtLink to="/" aria-label="Parrot Home">
             <img
               src="/images/parrot-logo-white.svg"
               alt="Parrot"
-              class="h-14 w-auto"
+              class="h-12 md:h-14 w-auto"
             />
           </NuxtLink>
-          <div class="flex items-center gap-5">
+          <div class="flex items-center gap-4 md:gap-5">
             <a
               href="https://facebook.com"
               target="_blank"
@@ -69,60 +69,60 @@
         </div>
 
         <!-- Links Grid -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 flex-1">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 flex-1">
           <!-- Customers -->
-          <div class="flex flex-col gap-4">
-            <h4 class="font-rubik text-[#ebebeb] text-xl font-bold">
+          <div class="flex flex-col gap-3 md:gap-4">
+            <h4 class="font-rubik text-[#ebebeb] text-lg md:text-xl font-bold">
               Customers
             </h4>
-            <ul class="flex flex-col gap-3">
+            <ul class="flex flex-col gap-2 md:gap-3">
               <li v-for="(route, link) in customerLinks" :key="link">
                 <NuxtLink
                   :to="route"
-                  class="font-body text-white/70 text-sm hover:text-white transition-colors"
+                  class="font-body text-white/70 text-xs md:text-sm hover:text-white transition-colors"
                   >{{ link }}</NuxtLink
                 >
               </li>
             </ul>
           </div>
           <!-- Business -->
-          <div class="flex flex-col gap-4">
-            <h4 class="font-heading text-[#ebebeb] text-xl font-bold">
+          <div class="flex flex-col gap-3 md:gap-4">
+            <h4 class="font-heading text-[#ebebeb] text-lg md:text-xl font-bold">
               Business
             </h4>
-            <ul class="flex flex-col gap-3">
+            <ul class="flex flex-col gap-2 md:gap-3">
               <li v-for="(route, link) in businessLinks" :key="link">
                 <NuxtLink
                   :to="route"
-                  class="font-body text-white/70 text-sm hover:text-white transition-colors"
+                  class="font-body text-white/70 text-xs md:text-sm hover:text-white transition-colors"
                   >{{ link }}</NuxtLink
                 >
               </li>
             </ul>
           </div>
           <!-- Company -->
-          <div class="flex flex-col gap-4">
-            <h4 class="font-heading text-[#ebebeb] text-xl font-bold">
+          <div class="flex flex-col gap-3 md:gap-4">
+            <h4 class="font-heading text-[#ebebeb] text-lg md:text-xl font-bold">
               Company
             </h4>
-            <ul class="flex flex-col gap-3">
+            <ul class="flex flex-col gap-2 md:gap-3">
               <li v-for="(route, link) in companyLinks" :key="link">
                 <NuxtLink
                   :to="route"
-                  class="font-body text-white/70 text-sm hover:text-white transition-colors"
+                  class="font-body text-white/70 text-xs md:text-sm hover:text-white transition-colors"
                   >{{ link }}</NuxtLink
                 >
               </li>
             </ul>
           </div>
           <!-- Legal -->
-          <div class="flex flex-col gap-4">
-            <h4 class="font-heading text-[#ebebeb] text-xl font-bold">Legal</h4>
-            <ul class="flex flex-col gap-3">
+          <div class="flex flex-col gap-3 md:gap-4">
+            <h4 class="font-heading text-[#ebebeb] text-lg md:text-xl font-bold">Legal</h4>
+            <ul class="flex flex-col gap-2 md:gap-3">
               <li v-for="(route, link) in legalLinks" :key="link">
                 <NuxtLink
                   :to="route"
-                  class="font-body text-white/70 text-sm hover:text-white transition-colors"
+                  class="font-body text-white/70 text-xs md:text-sm hover:text-white transition-colors"
                   >{{ link }}</NuxtLink
                 >
               </li>
@@ -132,10 +132,10 @@
       </div>
 
       <!-- Divider -->
-      <div class="border-t border-[#6b6ba6] mb-6" />
+      <div class="border-t border-[#6b6ba6] mb-4 md:mb-6" />
 
       <!-- Copyright -->
-      <p class="font-rubik text-[#ebebeb] text-base font-medium text-center">
+      <p class="font-rubik text-[#ebebeb] text-sm md:text-base font-medium text-center">
         © Copyright 2023 All Rights Reserved
       </p>
     </div>

@@ -43,7 +43,7 @@ const successMessage = ref("");
 
 // ─── User info modal state ──────────────────────────────────────────────────────
 const showUserInfoModal = ref(false);
-const userFormData = ref({ firstName: "", lastName: "", email: "" });
+const userFormData = ref({ firstName: "", lastName: "", email: "", phone: "" });
 const userFormErrors = ref<Record<string, string>>({});
 
 // ─── Form state ──────────────────────────────────────────────────────────────
@@ -702,7 +702,7 @@ onUnmounted(() => {
                   d="M12 4.5v15m7.5-7.5h-15"
                 />
               </svg>
-              <span class="text-[11px] text-review-text-muted">Add more</span>
+              <span class="text-[11px] text-review-text-muted">Add Photo</span>
             </button>
             <div
               v-for="media in textMedia"
@@ -1710,6 +1710,29 @@ onUnmounted(() => {
                   class="text-xs text-red-600 font-medium"
                 >
                   {{ userFormErrors.email }}
+                </p>
+              </div>
+
+               <div class="flex flex-col gap-2">
+                <label class="text-sm font-semibold text-gray-700"
+                  >Phone Number</label
+                >
+                <input
+                  v-model="userFormData.phone"
+                  type="tel"
+                  placeholder="123-456-7890"
+                  class="px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-review-primary focus:ring-2 focus:ring-review-primary/20 transition-all bg-gray-50"
+                  :class="
+                    userFormErrors.phone
+                      ? 'border-red-400 bg-red-50 focus:ring-red-100'
+                      : ''
+                  "
+                />
+                <p
+                  v-if="userFormErrors.phone"
+                  class="text-xs text-red-600 font-medium"
+                >
+                  {{ userFormErrors.phone }}
                 </p>
               </div>
             </div>

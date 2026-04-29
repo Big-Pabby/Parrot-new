@@ -41,7 +41,7 @@ onMounted(() => {
   <section ref="sectionRef" class="py-20 lg:py-28">
     <div class="max-w-[1400px] mx-auto px-8 lg:px-20">
       <!-- Section label -->
-      <p class="font-body text-black text-xl lg:text-2xl mb-5 hw-animate">
+      <p class="font-body text-black text-lg mb-5 hw-animate">
         {{ number }} {{ label }}
       </p>
 
@@ -61,17 +61,17 @@ onMounted(() => {
         <!-- Steps -->
         <div class="flex flex-col gap-8 mb-12">
           <div v-for="(step, i) in steps" :key="i">
-            <p class="font-body text-xl lg:text-2xl font-bold text-black leading-snug mb-2">
+            <p class="font-body text-lg font-bold text-black leading-snug mb-2">
               {{ i + 1 }}.&nbsp;&nbsp;&nbsp;&nbsp;{{ step.title }}
             </p>
-            <p class="font-body text-xl lg:text-2xl font-normal text-black leading-relaxed pl-10">
+            <p class="font-body text-lg font-normal text-black leading-relaxed pl-10">
               {{ step.description }}
             </p>
           </div>
         </div>
 
         <!-- Quote / closing text -->
-        <p class="font-body text-xl lg:text-2xl text-black leading-relaxed mb-10">
+        <p class="font-body text-lg text-black leading-relaxed mb-10">
           {{ quote }}
         </p>
 

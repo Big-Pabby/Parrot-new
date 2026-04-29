@@ -55,65 +55,65 @@ const tabContent: Record<string, { title: string; bullets: string[]; description
 </script>
 
 <template>
-  <section class="bg-lavender ">
-    <div class="max-w-[1400px] mx-auto px-8 lg:px-20">
-      <!-- Heading -->
-      <h2 class="font-heading text-4xl lg:text-[56px] font-bold leading-tight text-black my-16 max-w-[1000px] scroll-animate">
-       Know the truth about any business or product before you buy.
-      </h2>
+   <section class="bg-lavender ">
+     <div class="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-20">
+       <!-- Heading -->
+       <h2 class="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-[56px] font-bold leading-tight text-black my-16 max-w-full scroll-animate">
+        Know the truth about any business or product before you buy.
+       </h2>
 
-      <!-- Card -->
-      <div class="bg-white border-2 border-black rounded-2xl shadow-brutal p-8 lg:p-12 scroll-animate">
-        <!-- Tabs -->
-        <div class="flex gap-2 mb-10 flex-wrap">
-          <button
-            v-for="tab in tabs"
-            :key="tab"
-            :class="[
-              'px-7 py-3 rounded-lg border-2 border-black font-body font-semibold text-lg transition-all',
-              activeTab === tab
-                ? 'bg-navy text-white'
-                : 'bg-white text-black hover:bg-gray-50',
-            ]"
-            @click="activeTab = tab"
-          >
-            {{ tab }}
-          </button>
-        </div>
+       <!-- Card -->
+       <div class="bg-white border-2 border-black rounded-2xl shadow-brutal p-4 sm:p-6 md:p-8 lg:p-12 scroll-animate">
+         <!-- Tabs -->
+         <div class="flex gap-2 mb-6 md:mb-8 lg:mb-10 flex-wrap">
+           <button
+             v-for="tab in tabs"
+             :key="tab"
+             :class="[
+               'px-4 sm:px-6 py-2.5 md:px-7 md:py-3 rounded-lg border-2 border-black font-body font-semibold text-sm sm:text-base md:text-lg transition-all min-w-[100px] sm:min-w-[120px] text-center',
+               activeTab === tab
+                 ? 'bg-navy text-white'
+                 : 'bg-white text-black hover:bg-gray-50',
+             ]"
+             @click="activeTab = tab"
+           >
+             {{ tab }}
+           </button>
+         </div>
 
-        <!-- Tab Content -->
-        <Transition name="tab-fade" mode="out-in">
-          <div :key="activeTab" class="flex flex-col lg:flex-row gap-10 items-center">
-            <!-- Phone Mockup -->
-            <div class="flex-1 w-full flex">
-              <img
-                  :src="tabContent[activeTab].image"
-                  alt="Parrot app feature"
-                  class=" object-contain max-h-[500px] rounded-xl"
-                />
-            </div>
+         <!-- Tab Content -->
+         <Transition name="tab-fade" mode="out-in">
+           <div :key="activeTab" class="flex flex-col lg:flex-row gap-6 md:gap-8 lg:gap-10 items-center">
+             <!-- Phone Mockup -->
+             <div class="flex-1 w-full">
+               <img
+                   :src="tabContent[activeTab].image"
+                   alt="Parrot app feature"
+                   class=" object-contain max-h-[350px] md:max-h-[400px] lg:max-h-[500px] rounded-xl "
+                 />
+             </div>
 
-            <!-- Feature List -->
-            <div class="flex flex-col gap-8 flex-1">
-              <h3 class="font-heading text-[40px] lg:text-[48px] font-normal leading-tight text-black">
-                {{ tabContent[activeTab].title }}
-              </h3>
-              <div class="flex flex-col gap-6">
-                <div
-                  v-for="bullet in tabContent[activeTab].bullets"
-                  :key="bullet"
-                  class="flex items-start gap-4"
-                >
-                  <img src="/images/checkmark.svg" alt="" class="w-9 h-9 flex-shrink-0 mt-0.5" />
-                  <span class="font-body text-black text-xl leading-relaxed">{{ bullet }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Transition>
-      </div>
-    </div>
-  </section>
+             <!-- Feature List -->
+             <div class="flex flex-col gap-6 md:gap-8 order-1 lg:order-2 text-left">
+               <h3 class="font-heading text-2xl sm:text-3xl md:text-[40px] lg:text-[48px] font-normal leading-tight text-black">
+                 {{ tabContent[activeTab].title }}
+               </h3>
+               <div class="flex flex-col gap-4 md:gap-6">
+                 <div
+                   v-for="bullet in tabContent[activeTab].bullets"
+                   :key="bullet"
+                   class="flex items-start gap-3 md:gap-4"
+                 >
+                   <img src="/images/checkmark.svg" alt="" class="w-6 h-6 md:w-9 md:h-9 flex-shrink-0 mt-0.5" />
+                   <span class="font-body text-black text-base md:text-xl leading-relaxed">{{ bullet }}</span>
+                 </div>
+               </div>
+             </div>
+           </div>
+         </Transition>
+       </div>
+     </div>
+   </section>
 </template>
 
 <style scoped>

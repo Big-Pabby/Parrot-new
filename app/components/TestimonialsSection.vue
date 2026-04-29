@@ -78,116 +78,116 @@ const next = () => {
 </script>
 
 <template>
-  <section class="bg-cream py-20 lg:py-28">
-    <div class="max-w-[1400px] mx-auto px-8 lg:px-20">
-      <!-- Heading -->
-      <div class="text-center mb-16">
-        <h2
-          class="font-heading text-4xl lg:text-[56px] font-semibold leading-tight text-black mb-4 scroll-animate"
-        >
-          The community is already talking.
-        </h2>
-        <p class="font-body text-black text-xl">
-          Here is what our members are saying.
-        </p>
-      </div>
+   <section class="bg-cream py-12 md:py-16 lg:py-28">
+     <div class="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-20">
+       <!-- Heading -->
+       <div class="text-center mb-10 md:mb-12 lg:mb-16">
+         <h2
+           class="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-[56px] font-semibold leading-tight text-black mb-4 scroll-animate"
+         >
+           The community is already talking.
+         </h2>
+         <p class="font-body text-black text-base md:text-xl">
+           Here is what our members are saying.
+         </p>
+       </div>
 
-      <!-- Testimonial Cards -->
-      <div
-        :key="currentPage"
-        class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12"
-      >
-        <div
-          v-for="(t, idx) in visibleTestimonials"
-          :key="t.name + currentPage"
-          :class="[
-            'bg-white border-2 border-black rounded-2xl p-8 flex flex-col gap-6',
-            idx === 1 ? 'shadow-brutal' : 'shadow-brutal-sm',
-          ]"
-        >
-          <div class="flex items-center gap-4">
-            <img
-              :src="t.avatar"
-              :alt="t.name"
-              class="w-16 h-16 rounded-full object-cover border-2 border-black shadow-brutal-sm flex-shrink-0"
-            />
-            <div>
-              <p class="font-heading text-2xl font-semibold text-black">
-                {{ t.name }}
-              </p>
-              <p class="font-body text-base text-gray-600">
-                {{ t.location }}
-              </p>
-            </div>
-          </div>
-          <p class="font-body text-base text-black leading-relaxed flex-1">
-            {{ t.text }}
-          </p>
-        </div>
-      </div>
+       <!-- Testimonial Cards -->
+       <div
+         :key="currentPage"
+         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8 md:mb-12"
+       >
+         <div
+           v-for="(t, idx) in visibleTestimonials"
+           :key="t.name + currentPage"
+           :class="[
+             'bg-white border-2 border-black rounded-2xl p-4 sm:p-6 md:p-8 flex flex-col gap-4 md:gap-6',
+             idx === 1 ? 'shadow-brutal' : 'shadow-brutal-sm',
+           ]"
+         >
+           <div class="flex items-center gap-3 md:gap-4">
+             <img
+               :src="t.avatar"
+               :alt="t.name"
+               class="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover border-2 border-black shadow-brutal-sm flex-shrink-0"
+             />
+             <div>
+               <p class="font-heading text-xl md:text-2xl font-semibold text-black">
+                 {{ t.name }}
+               </p>
+               <p class="font-body text-xs md:text-base text-gray-600">
+                 {{ t.location }}
+               </p>
+             </div>
+           </div>
+           <p class="font-body text-base text-black leading-relaxed flex-1">
+             {{ t.text }}
+           </p>
+         </div>
+       </div>
 
-      <!-- Carousel Navigation -->
-      <div class="flex items-center justify-center gap-6">
-        <button
-          class="w-11 h-11 flex items-center justify-center border-2 border-black rounded-xl bg-navy text-white hover:bg-navy/90 transition-colors shadow-brutal-sm disabled:opacity-40"
-          aria-label="Previous testimonials"
-          :disabled="currentPage === 1"
-          @click="prev"
-        >
-          <svg
-            class="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-        </button>
+       <!-- Carousel Navigation -->
+       <div class="flex items-center justify-center gap-4 md:gap-6">
+         <button
+           class="w-10 h-10 md:w-11 md:h-11 flex items-center justify-center border-2 border-black rounded-xl bg-navy text-white hover:bg-navy/90 transition-colors shadow-brutal-sm disabled:opacity-40"
+           aria-label="Previous testimonials"
+           :disabled="currentPage === 1"
+           @click="prev"
+         >
+           <svg
+             class="w-4 h-4 md:w-5 md:h-5"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             viewBox="0 0 24 24"
+           >
+             <path
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               d="M15 19l-7-7 7-7"
+             />
+           </svg>
+         </button>
 
-        <!-- Dots -->
-        <div class="flex gap-2">
-          <button
-            v-for="i in totalPages"
-            :key="i"
-            :class="[
-              'rounded-sm transition-all',
-              currentPage === i
-                ? 'w-6 h-3 bg-navy'
-                : 'w-3 h-3 bg-gray-300 hover:bg-gray-400',
-            ]"
-            :aria-label="`Go to page ${i}`"
-            @click="currentPage = i"
-          />
-        </div>
+         <!-- Dots -->
+         <div class="flex gap-1.5 md:gap-2">
+           <button
+             v-for="i in totalPages"
+             :key="i"
+             :class="[
+               'rounded-sm transition-all',
+               currentPage === i
+                 ? 'w-5 h-3 md:w-6 md:h-3 bg-navy'
+                 : 'w-2.5 h-2.5 md:w-3 md:h-3 bg-gray-300 hover:bg-gray-400',
+             ]"
+             :aria-label="`Go to page ${i}`"
+             @click="currentPage = i"
+           />
+         </div>
 
-        <button
-          class="w-11 h-11 flex items-center justify-center border-2 border-black rounded-xl bg-navy text-white hover:bg-navy/90 transition-colors shadow-brutal-sm disabled:opacity-40"
-          aria-label="Next testimonials"
-          :disabled="currentPage === totalPages"
-          @click="next"
-        >
-          <svg
-            class="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
-        </button>
-      </div>
-    </div>
-  </section>
+         <button
+           class="w-10 h-10 md:w-11 md:h-11 flex items-center justify-center border-2 border-black rounded-xl bg-navy text-white hover:bg-navy/90 transition-colors shadow-brutal-sm disabled:opacity-40"
+           aria-label="Next testimonials"
+           :disabled="currentPage === totalPages"
+           @click="next"
+         >
+           <svg
+             class="w-4 h-4 md:w-5 md:h-5"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             viewBox="0 0 24 24"
+           >
+             <path
+               stroke-linecap="round"
+               stroke-linejoin="round"
+               d="M9 5l7 7-7 7"
+             />
+           </svg>
+         </button>
+       </div>
+     </div>
+   </section>
 </template>
 
 <style scoped>

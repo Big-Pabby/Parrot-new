@@ -4,22 +4,22 @@
 
     <main>
       <!-- Hero Section -->
-      <section class="relative overflow-hidden bg-[#fff4d2] py-16 lg:py-24">
+      <section class="relative overflow-hidden bg-[#fff4d2] py-12 lg:py-24">
         <div class="container relative z-10 mx-auto px-8 lg:px-20">
-          <div class="pt-28">
-            <h1
-              class="text-right text-black font-heading text-[56px] lg:text-[64px] font-bold leading-[1.1]"
-            >
-              Our Story
-            </h1>
-          </div>
+           <div class="pt-28">
+             <h1
+               class="text-right text-black font-heading text-[40px] lg:text-[56px] xl:text-[64px] font-bold leading-[1.1]"
+             >
+               Our Story
+             </h1>
+           </div>
         </div>
       </section>
 
       <WaveSeparator from-color="#fff4d2" to-color="#c1c2ff" />
 
-      <!-- Intro Section -->
-      <section class="bg-lavender px-8 py-20 lg:px-20">
+       <!-- Intro Section -->
+       <section class="bg-lavender px-6 py-12 lg:px-20 lg:py-24">
         <div class="">
           <p class="font-body text-black text-xl leading-relaxed">
             Why We Built Parrot
@@ -125,8 +125,8 @@
 
       <WaveSeparator from-color="#c1c2ff" to-color="#fff4d2" />
 
-      <!-- Founder Story Section -->
-      <section class="bg-[#fff4d2] px-8 py-20 lg:px-20">
+       <!-- Founder Story Section -->
+       <section class="bg-[#fff4d2] px-6 py-12 lg:px-20 lg:py-24">
         <div class="container mx-auto">
           <div class="rounded-[24px] border border-solid border-black bg-white">
             <div class="p-8 md:p-12 lg:p-16">
@@ -224,10 +224,10 @@
         </div>
       </section>
 <WaveSeparator from-color="#fff4d2" to-color="#c1c2ff" />
-      <!-- Philosophy Section -->
-      <section
-        class="relative overflow-hidden bg-lavender px-8 py-20 lg:px-20"
-      >
+       <!-- Philosophy Section -->
+       <section
+         class="relative overflow-hidden bg-lavender px-6 py-12 lg:px-20 lg:py-24"
+       >
         <div class="container relative z-10 mx-auto">
           <div class="mx-auto max-w-[1308px]">
             <h2

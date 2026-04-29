@@ -79,109 +79,108 @@ const isLastSlide = () => currentSlide.value === slides.length - 1;
 </script>
 
 <template>
-  <section class="bg-lavender pb-0 pt-20">
-    <div class="max-w-[1400px] mx-auto px-8 lg:px-20 pb-20 lg:pb-28">
-      <!-- Header Row -->
-      <div
-        class="flex flex-col lg:flex-row lg:items-start justify-between gap-6 mb-10"
-      >
-        <div class="max-w-[640px]">
-          <h2
-            class="font-heading text-4xl lg:text-[56px] font-bold leading-tight text-black mb-4 scroll-animate"
-          >
-            Four Kinds of People. One Goal
-          </h2>
-          <p class="font-body text-black text-xl leading-relaxed">
-            Every customer, creator, reviewer, and business on Parrot is here
-            for the same reason — to make sure no one buys blind.
-          </p>
-        </div>
-        <!-- Nav Arrows -->
-        <div class="flex gap-3 flex-shrink-0 self-start lg:self-auto lg:mt-4">
-          <button
-            :disabled="isFirstSlide()"
-            class="w-12 h-12 flex items-center justify-center border-2 border-black rounded-xl bg-white hover:bg-gray-50 transition-colors shadow-brutal-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white"
-            aria-label="Previous"
-            @click="prev"
-          >
-            <svg
-              class="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-          </button>
-          <button
-            :disabled="isLastSlide()"
-            class="w-12 h-12 flex items-center justify-center border-2 border-black rounded-xl bg-navy text-white hover:bg-navy/90 transition-colors shadow-brutal-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-navy"
-            aria-label="Next"
-            @click="next"
-          >
-            <svg
-              class="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </button>
-        </div>
-      </div>
+   <section class="bg-lavender pb-0 pt-12 md:pt-20">
+     <div class="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-20 pb-16 md:pb-20 lg:pb-28">
+       <!-- Header Row -->
+       <div
+         class="flex flex-col lg:flex-row lg:items-start justify-between gap-4 md:gap-6 mb-8 md:mb-10"
+       >
+         <div class="max-w-[640px]">
+           <h2
+             class="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-[56px] font-bold leading-tight text-black mb-4 scroll-animate"
+           >
+             Four Kinds of People. One Goal
+           </h2>
+           <p class="font-body text-black text-base md:text-xl leading-relaxed">
+             Every customer, creator, reviewer, and business on Parrot is here
+             for the same reason — to make sure no one buys blind.
+           </p>
+         </div>
+         <!-- Nav Arrows -->
+         <div class="flex gap-3 flex-shrink-0 self-start lg:self-auto lg:mt-4">
+           <button
+             :disabled="isFirstSlide()"
+             class="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center border-2 border-black rounded-xl bg-white hover:bg-gray-50 transition-colors shadow-brutal-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white"
+             aria-label="Previous"
+             @click="prev"
+           >
+             <svg
+               class="w-4 h-4 md:w-5 md:h-5"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               viewBox="0 0 24 24"
+             >
+               <path
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 d="M15 19l-7-7 7-7"
+               />
+             </svg>
+           </button>
+           <button
+             :disabled="isLastSlide()"
+             class="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center border-2 border-black rounded-xl bg-navy text-white hover:bg-navy/90 transition-colors shadow-brutal-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-navy"
+             aria-label="Next"
+             @click="next"
+           >
+             <svg
+               class="w-4 h-4 md:w-5 md:h-5"
+               fill="none"
+               stroke="currentColor"
+               stroke-width="2"
+               viewBox="0 0 24 24"
+             >
+               <path
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 d="M9 5l7 7-7 7"
+               />
+             </svg>
+           </button>
+         </div>
+       </div>
 
-      <!-- Slide Card -->
-      <div
-        :key="currentSlide"
-        class="bg-white border-2 border-black rounded-2xl shadow-brutal overflow-hidden p-12"
-      >
-        <div class="flex flex-col items-stretch lg:flex-row">
-          <!-- Image -->
-          <div class="lg:w-[45%] rounded-2xl overflow-hidden h-full h-64 lg:h-[450px]">
-            <img
-              :src="slides[currentSlide].image"
-              :alt="slides[currentSlide].type"
-              class="w-full h-full  object-cover border-b-2 lg:border-b-0 lg:border-r-2 border-black"
-             
-            />
-          </div>
-          <!-- Content -->
-          <div class="flex-1 p-8 lg:p-12 flex flex-col justify-center gap-6">
-            <h3
-              class="font-heading text-4xl lg:text-5xl font-normal text-black"
-            >
-              {{ slides[currentSlide].type }}
-            </h3>
-            <div class="flex flex-col gap-5">
-              <p class="font-body text-black text-xl leading-relaxed">
-                {{ slides[currentSlide].description }}
-              </p>
-              <p class="font-body font-bold text-black text-xl leading-relaxed">
-                {{ slides[currentSlide].quote }}
-              </p>
-            </div>
-            <a
-              href="https://onelink.to/nwmnzy"
-              class="inline-flex items-center border-2 border-black bg-parrot-amber text-black font-body font-medium text-base px-6 py-2.5 rounded-lg hover:brightness-95 transition-all self-start"
-            >
-              {{ slides[currentSlide].cta }}
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+       <!-- Slide Card -->
+       <div
+         :key="currentSlide"
+         class="bg-white border-2 border-black rounded-2xl shadow-brutal overflow-hidden"
+       >
+         <div class="flex flex-col lg:flex-row">
+           <!-- Image -->
+           <div class="lg:w-[45%] rounded-t-2xl lg:rounded-t-none lg:rounded-l-2xl overflow-hidden h-64 md:h-80 lg:h-[450px]">
+             <img
+               :src="slides[currentSlide].image"
+               :alt="slides[currentSlide].type"
+               class="w-full h-full object-cover border-b-2 lg:border-b-0 lg:border-r-2 border-black"
+             />
+           </div>
+           <!-- Content -->
+           <div class="flex-1 p-6 md:p-8 lg:p-12 flex flex-col justify-center gap-4 md:gap-6">
+             <h3
+               class="font-heading text-3xl md:text-4xl lg:text-5xl font-normal text-black"
+             >
+               {{ slides[currentSlide].type }}
+             </h3>
+             <div class="flex flex-col gap-4 md:gap-5">
+               <p class="font-body text-black text-base md:text-xl leading-relaxed">
+                 {{ slides[currentSlide].description }}
+               </p>
+               <p class="font-body font-bold text-black text-base md:text-xl leading-relaxed">
+                 {{ slides[currentSlide].quote }}
+               </p>
+             </div>
+             <a
+               href="https://onelink.to/nwmnzy"
+               class="inline-flex items-center border-2 border-black bg-parrot-amber text-black font-body font-medium text-sm md:text-base px-5 md:px-6 py-2 md:py-2.5 rounded-lg hover:brightness-95 transition-all self-start"
+             >
+               {{ slides[currentSlide].cta }}
+             </a>
+           </div>
+         </div>
+       </div>
+     </div>
+   </section>
 </template>
 
 <style scoped>

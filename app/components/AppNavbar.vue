@@ -33,7 +33,7 @@ const navLinks = computed(() => [
       <!-- CTA Button -->
       <a
         href="https://onelink.to/nwmnzy"
-        class="hidden lg:block bg-parrot-amber border-2 border-black text-black font-body text-base font-medium px-7 py-2.5 rounded-lg hover:brightness-95 transition-all"
+        class="hidden lg:block bg-parrot-amber shadow-brutal-sm border-2 border-black text-black font-body text-base font-medium px-7 py-2.5 rounded-lg hover:brightness-95 transition-all"
       >
         Sign Up On Parrot
       </a>

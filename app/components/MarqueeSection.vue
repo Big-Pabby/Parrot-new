@@ -3,7 +3,7 @@
     <!-- Orange tape: tilted down -->
     <div
       class="absolute left-[-1%] right-[-1%] bg-parrot-tape1 border-y-2 border-black"
-      style="top: 20px; transform: rotate(-6deg); padding: 10px 0; z-index: 10;"
+      style="top: 20px; transform: rotate(-6deg); padding: 20px 0; z-index: 10;"
     >
       <div class="flex overflow-hidden">
         <div class="animate-marquee flex shrink-0 whitespace-nowrap">
@@ -26,7 +26,7 @@
     <!-- Lime tape: tilted up -->
     <div
       class="absolute left-[-1%] right-[-1%] bg-parrot-tape2 border-y-2 border-black"
-      style="top: 50px; transform: rotate(6deg); padding: 10px 0; z-index: 10;"
+      style="top: 50px; transform: rotate(6deg); padding: 20px 0; z-index: 10;"
     >
       <div class="flex overflow-hidden">
         <div class="animate-marquee-reverse flex shrink-0 whitespace-nowrap">

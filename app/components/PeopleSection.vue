@@ -79,19 +79,19 @@ const isLastSlide = () => currentSlide.value === slides.length - 1;
 </script>
 
 <template>
-   <section class="bg-lavender pb-0 pt-12 md:pt-20">
+   <section class="bg-lavender pb-0 pt-12 md:pt-32">
      <div class="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-20 pb-16 md:pb-20 lg:pb-28">
        <!-- Header Row -->
        <div
          class="flex flex-col lg:flex-row lg:items-start justify-between gap-4 md:gap-6 mb-8 md:mb-10"
        >
-         <div class="max-w-[640px]">
+         <div class="">
            <h2
-             class="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-[56px] font-bold leading-tight text-black mb-4 scroll-animate"
+             class="font-heading text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-black mb-4 scroll-animate"
            >
              Four Kinds of People. One Goal
            </h2>
-           <p class="font-body text-black text-base md:text-xl leading-relaxed">
+           <p class="font-body max-w-[640px] text-black text-base md:text-xl leading-relaxed">
              Every customer, creator, reviewer, and business on Parrot is here
              for the same reason — to make sure no one buys blind.
            </p>
@@ -146,17 +146,17 @@ const isLastSlide = () => currentSlide.value === slides.length - 1;
          :key="currentSlide"
          class="bg-white border-2 border-black rounded-2xl shadow-brutal overflow-hidden"
        >
-         <div class="flex flex-col lg:flex-row">
+         <div class="flex flex-col lg:flex-row p-6 md:p-12 gap-12">
            <!-- Image -->
-           <div class="lg:w-[45%] rounded-t-2xl lg:rounded-t-none lg:rounded-l-2xl overflow-hidden h-64 md:h-80 lg:h-[450px]">
+           <div class="lg:w-6/12">
              <img
                :src="slides[currentSlide].image"
                :alt="slides[currentSlide].type"
-               class="w-full h-full object-cover border-b-2 lg:border-b-0 lg:border-r-2 border-black"
+               class="w-full h-full max-h-[450px] rounded-2xl shadow-brutal object-cover "
              />
            </div>
            <!-- Content -->
-           <div class="flex-1 p-6 md:p-8 lg:p-12 flex flex-col justify-center gap-4 md:gap-6">
+           <div class="flex-1 flex flex-col justify-center gap-4 md:gap-6">
              <h3
                class="font-heading text-3xl md:text-4xl lg:text-5xl font-normal text-black"
              >

@@ -231,7 +231,7 @@ const minDate = new Date(Date.now() - 89 * 24 * 60 * 60 * 1000)
           @click="servicesOpen = !servicesOpen"
         >
           <span class="text-[14px] font-medium text-review-text-mid text-left"
-            >What did you buy (optional)?</span
+            >What did you buy? <span class="text-[12px] text-review-text-muted">(optional)</span></span
           >
           <svg
             class="w-4 h-4 text-review-text-mid flex-shrink-0 transition-transform duration-200"
@@ -346,7 +346,7 @@ const minDate = new Date(Date.now() - 89 * 24 * 60 * 60 * 1000)
           @click="staffOpen = !staffOpen"
         >
           <span class="text-[14px] font-medium text-review-text-mid text-left"
-            >Who attended to you? (optional)</span
+            >Who attended to you?<span class="text-[12px] text-review-text-muted">(optional)</span></span
           >
           <svg
             class="w-4 h-4 text-review-text-mid flex-shrink-0 transition-transform duration-200"

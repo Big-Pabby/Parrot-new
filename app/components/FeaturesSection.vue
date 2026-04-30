@@ -67,7 +67,8 @@ const tabContent: Record<
       <h2
         class="font-heading text-3xl sm:text-4xl md:text-4xl font-bold leading-tight text-black mt-20 mb-8 max-w-[700px] scroll-animate"
       >
-        Know the truth about any business or product before you buy.
+       Everything you need to avoid bad buying decisions.
+       
       </h2>
 
       <!-- Card -->

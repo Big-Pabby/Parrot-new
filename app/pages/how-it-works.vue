@@ -30,6 +30,7 @@ const sections: AudienceSection[] = [
     number: '01',
     label: 'FOR CUSTOMERS',
     headline: 'The community you check before you spend.',
+    image: '/images/customers.png',
     steps: [
       {
         title: 'Join in seconds',
@@ -50,7 +51,7 @@ const sections: AudienceSection[] = [
         description:
           'Share your experience after you buy. Video, voice note, photo, or text. Your review lives permanently on that business profile.',
       },
-    ],
+      ],
     quote:
       '"I searched for a vendor before buying. Saw 43 reviews, watched two videos, and ordered without a single doubt. This is how buying should always feel."',
     ctaText: 'Join for free',
@@ -60,6 +61,7 @@ const sections: AudienceSection[] = [
     number: '02',
     label: 'FOR UGC CREATORS',
     headline: 'Start posting commerce content where people are in buying mode.',
+    image: '/images/ugc-creator.png',
     steps: [
       {
         title: 'Set up your creator profile',
@@ -92,6 +94,7 @@ const sections: AudienceSection[] = [
     label: 'FOR PRO REVIEWERS',
     headline:
       'Parrot is the only platform where your audience comes specifically to read reviews and make spending decisions.',
+    image: '/images/reviewers.png',
     steps: [
       {
         title: 'Sign Up as a Pro Reviewer',
@@ -123,6 +126,7 @@ const sections: AudienceSection[] = [
     number: '04',
     label: 'FOR BUSINESSES',
     headline: 'Customers are already talking about you on Parrot.',
+    image: '/images/business.png',
     steps: [
       {
         title: 'Create your verified business profile',
@@ -183,6 +187,7 @@ const sections: AudienceSection[] = [
             :quote="section.quote"
             :ctaText="section.ctaText"
             :ctaHref="section.ctaHref"
+            :image="section.image"
           />
         </div>
 

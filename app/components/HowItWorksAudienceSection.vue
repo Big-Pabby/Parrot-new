@@ -12,6 +12,7 @@ const props = defineProps<{
   quote: string
   ctaText: string
   ctaHref?: string
+  image?: string
 }>()
 
 const sectionRef = ref<HTMLElement | null>(null)
@@ -40,6 +41,7 @@ onMounted(() => {
 <template>
   <section ref="sectionRef" class="py-20 lg:py-28">
     <div class="max-w-[1400px] mx-auto px-8 lg:px-20">
+      
       <!-- Section label -->
       <p class="font-body text-black text-lg mb-5 hw-animate">
         {{ number }} {{ label }}
@@ -53,35 +55,54 @@ onMounted(() => {
         {{ headline }}
       </h2>
 
-      <!-- Content card -->
-      <div
-        class="bg-white border-2 border-black rounded-2xl p-10 lg:p-16 hw-animate"
-        style="box-shadow: var(--shadow-brutal); animation-delay: 0.2s"
-      >
-        <!-- Steps -->
-        <div class="flex flex-col gap-8 mb-12">
-          <div v-for="(step, i) in steps" :key="i">
-            <p class="font-body text-lg font-bold text-black leading-snug mb-2">
-              {{ i + 1 }}.&nbsp;&nbsp;&nbsp;&nbsp;{{ step.title }}
+      
+
+      <div class="flex flex-col lg:flex-row lg:gap-12 items-stretch">
+        
+        <!-- Content card -->
+        <div class="flex-1">
+          <div
+            class="bg-white border-2 border-black rounded-2xl p-10 lg:p-16 space-y-8 hw-animate h-full"
+            style="box-shadow: var(--shadow-brutal); animation-delay: 0.2s"
+          >
+           <!-- Image -->
+        <div class="lg:w-[500px] lg:shrink-0 mt-8 lg:mt-0 hidden lg:block hw-animate" style="animation-delay: 0.3s">
+          <img
+            v-if="image"
+            :src="image"
+            :alt="label + ' image'"
+            class="w-full rounded-2xl border-2 border-black"
+            style="box-shadow: var(--shadow-brutal)"
+          />
+        </div>
+            <!-- Steps -->
+            <div class="flex flex-col gap-8 mb-12">
+              <div v-for="(step, i) in steps" :key="i">
+                <p class="font-body text-lg font-bold text-black leading-snug mb-2">
+                  {{ i + 1 }}.&nbsp;&nbsp;&nbsp;&nbsp;{{ step.title }}
+                </p>
+                <p class="font-body text-lg font-normal text-black leading-relaxed pl-10">
+                  {{ step.description }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Quote / closing text -->
+            <p class="font-body text-lg text-black leading-relaxed mb-10">
+              {{ quote }}
             </p>
-            <p class="font-body text-lg font-normal text-black leading-relaxed pl-10">
-              {{ step.description }}
-            </p>
+
+            <!-- CTA button -->
+            <a
+              :href="ctaHref || '#'"
+              class="inline-block bg-lime border-2 border-black text-black font-body text-base lg:text-lg font-medium px-7 py-2.5 rounded-lg hover:brightness-95 active:translate-x-[2px] active:translate-y-[2px] transition-all"
+            >
+              {{ ctaText }}
+            </a>
           </div>
         </div>
 
-        <!-- Quote / closing text -->
-        <p class="font-body text-lg text-black leading-relaxed mb-10">
-          {{ quote }}
-        </p>
-
-        <!-- CTA button -->
-        <a
-          :href="ctaHref || '#'"
-          class="inline-block bg-lime border-2 border-black text-black font-body text-base lg:text-lg font-medium px-7 py-2.5 rounded-lg hover:brightness-95 active:translate-x-[2px] active:translate-y-[2px] transition-all"
-        >
-          {{ ctaText }}
-        </a>
+       
       </div>
     </div>
   </section>

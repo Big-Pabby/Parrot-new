@@ -67,79 +67,11 @@ const tabContent: Record<
       <h2
         class="font-heading text-3xl sm:text-4xl md:text-4xl font-bold leading-tight text-black mt-20 mb-8 max-w-[700px] scroll-animate"
       >
-       Everything you need to avoid bad buying decisions.
-       
+        Everything you need to avoid bad buying decisions.
       </h2>
+      <StackCard />
 
-      <!-- Card -->
-      <div
-        class="bg-white border-2 border-black rounded-2xl shadow-brutal p-4 sm:p-6 md:p-8 lg:p-16 scroll-animate"
-      >
-        <!-- Tabs -->
-        <div class="flex gap-2 mb-6 md:mb-8 lg:mb-10 flex-wrap">
-          <button
-            v-for="tab in tabs"
-            :key="tab"
-            :class="[
-              'px-4 sm:px-6 py-2.5 md:px-7 md:py-3 rounded-lg border-2 border-black shadow-brutal-sm font-body font-semibold text-sm sm:text-base md:text-lg transition-all min-w-[100px] sm:min-w-[120px] text-center',
-              activeTab === tab
-                ? 'bg-navy text-white'
-                : 'bg-white text-black hover:bg-gray-50',
-            ]"
-            @click="activeTab = tab"
-          >
-            {{ tab }}
-          </button>
-        </div>
-
-        <!-- Tab Content -->
-        <Transition name="tab-fade" mode="out-in">
-          <div
-            :key="activeTab"
-            class="flex flex-col lg:flex-row gap-12 items-start"
-          >
-            <!-- Phone Mockup -->
-            <div class="md:w-6/12 w-full ">
-              <img
-                :src="tabContent[activeTab].image"
-                alt="Parrot app feature"
-                class="rounded-xl md:h-auto h-[400px] "
-              />
-            </div>
-
-            <!-- Feature List -->
-            <div class="flex-1 flex flex-col gap-6 md:gap-8 text-left">
-              <h3
-                class="font-heading text-2xl sm:text-3xl md:text-[40px] font-normal leading-tight text-black"
-              >
-                {{ tabContent[activeTab].title }}
-              </h3>
-              <div class="flex flex-col gap-4 md:gap-6">
-                <div
-                  v-for="bullet in tabContent[activeTab].bullets"
-                  :key="bullet"
-                  class="flex items-center gap-3 md:gap-4"
-                >
-                  <div
-                    class="border-2 shadow-brutal-sm border-black rounded-[12px] p-2"
-                  >
-                    <img
-                      src="/images/checkmark.svg"
-                      alt=""
-                      class="w-6 h-6 md:w-9 md:h-9 "
-                    />
-                  </div>
-
-                  <span
-                    class="font-body text-black text-base md:text-lg leading-relaxed"
-                    >{{ bullet }}</span
-                  >
-                </div>
-              </div>
-            </div>
-          </div>
-        </Transition>
-      </div>
+      
     </div>
   </section>
 </template>
